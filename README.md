@@ -6,6 +6,7 @@ Using your prefered git client, clone this repo to a folder on your computer.
 Links to good git clients for windows/mac:
 
 https://www.sourcetreeapp.com/    Also works on OSX
+
 https://desktop.github.com/
  
 Once cloned open your prefered IDE and import the project.
