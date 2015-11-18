@@ -1,6 +1,6 @@
 package ser215.final_project;
 
-import java.util.Date;
+import java.util.Random;
 
 /**
  * Created by Brian on 11/16/2015.
@@ -12,6 +12,7 @@ public class Player {
     private int boardLocation;
     private PlayingCard activeCard;
     private boolean losingTurn;
+    private int playerNumber;
 
     //Default Constructor
     public Player() {
@@ -59,6 +60,9 @@ public class Player {
         return losingTurn;
     }
 
+    public int getPlayerNumber() {
+        return playerNumber;
+    }
 
     //Mutator Methods
     public void increaseBoardLocation(int diceRoll) {
@@ -71,5 +75,27 @@ public class Player {
 
     public void alternateLosingTurn() {
         this.losingTurn = !this.losingTurn;
+    }
+
+    public void setPlayerNumber(int playerNumber) {
+        this.playerNumber = playerNumber;
+    }
+
+    //Other Methods
+    public int rollDie() {
+        Random rng = new Random();
+        return (rng.nextInt(11) + 2);
+    }
+
+    public boolean winBattle(Player defender) {
+        int attackerRoll = rollDie();
+        int defenderRoll = rollDie();
+
+        //INSERT FORMULA FOR DETERMINING WINNER AFTER THIS
+        if (attackerRoll > defenderRoll) {
+            return true;
+        }else {
+            return false;
+        }
     }
 }
