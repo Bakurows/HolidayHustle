@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="32" tileheight="32" nextobjectid="1">
+ <tileset firstgid="1" name="DungeonCrawl_ProjectUtumnoTileset" tilewidth="32" tileheight="32" tilecount="3072">
+  <image source="tiles/DungeonCrawl_ProjectUtumnoTileset.png" width="2048" height="1536"/>
+  <tile id="511">
+   <animation>
+    <frame tileid="670" duration="100"/>
+    <frame tileid="671" duration="100"/>
+    <frame tileid="672" duration="100"/>
+    <frame tileid="673" duration="100"/>
+    <frame tileid="674" duration="100"/>
+    <frame tileid="675" duration="100"/>
+    <frame tileid="676" duration="100"/>
+    <frame tileid="677" duration="100"/>
+   </animation>
+  </tile>
+ </tileset>
+ <tileset firstgid="3073" name="hyptosis_tile-art-batch-1" tilewidth="32" tileheight="32" tilecount="900">
+  <image source="tiles/hyptosis_tile-art-batch-1.png" width="960" height="960"/>
+ </tileset>
+ <tileset firstgid="3973" name="hyptosis_til-art-batch-2" tilewidth="32" tileheight="32" tilecount="900">
+  <image source="tiles/hyptosis_til-art-batch-2.png" width="960" height="960"/>
+ </tileset>
+ <tileset firstgid="4873" name="lpc leaf recolors" tilewidth="32" tileheight="32" tilecount="20">
+  <image source="tiles/lpc leaf recolors.png" width="128" height="160"/>
+  <tile id="12">
+   <animation>
+    <frame tileid="8" duration="100"/>
+    <frame tileid="9" duration="100"/>
+    <frame tileid="10" duration="100"/>
+    <frame tileid="11" duration="100"/>
+   </animation>
+  </tile>
+ </tileset>
+ <layer name="Tile Layer 1" width="30" height="30">
+  <data encoding="base64" compression="zlib">
+   eJzl1l0KgzAMB/CCfdsFPMvutQPubZ0wL7CL+ObKKIaQJjGauo+HP1aU/Gi0pVMXwo3JZAhXD9bd09WY0O1jCCN69ozvSFZ5T2tuccszi8m5uG7NlOrnujBWd+38ct3hdb0jo4U7EmOtW/ueuI999HeLk/uYiF56ugPTV08Xr71/dGv33m7t//Z0tWt5q6s1f8XF4fq+5z7JraFPd6/dEumMQfW41Xyp/bnVf3XU+v1m93GQC3MRQp1pLG5CkeabVnici2PZN6ScT8u4pQszA5ArntA=
+  </data>
+ </layer>
+ <layer name="Obstacles" width="30" height="30">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo4By0MU90C5ABbRyzzEC8pEUmk+MuwcqrGlpL6nhRigeqKGHHDuIBaSG5WDLX+QCWvpjKIcpOW4hNc9QWjYNBzDQcY5cphByC0ieFPdiU7uKj3j95OoZ6DClN6BlvTAYwUiL35EMACkrEfM=
+  </data>
+ </layer>
+ <layer name="Decorations" width="30" height="30">
+  <data encoding="base64" compression="zlib">
+   eJy9VktOAzEMHaaIbZWs2JVeBM5EL0KPwO8AnIDfBegKNi3tBdolSEARjqZWTHBiJzPDk55STRK/ZzuTTlX1j5sD3bwbw7XS3hI81834UuvWU1/4m/PaFaT43HxqT0lNuT1d5qv1qokjaUhrUnG6yjlWz1gNJF8pjG1cNxWzRIvuObH+mfa8dHGuxkQ39NRHfREu39g7qInrfNNecdD0SpsD9RZ659buDZrfOOZohZrSM0lXE1fy2EaX6zPiHGp5savnFYzXNr5X4zGGUPcWdO6A98AH4COjm3M2JD3EHHQWwFfgErgCnpqqmhhdHpIu1abzI+jLJ2h9AbfAb+AZaE5Ns25idHd9CbDHl/Z3j13MqUnvRd3DfU8tsMcuBu1xyX+4BqPd2cceuxhL0l/Nmcp5/8JnVGdL+rsettOVfKAO4q32Y1/fQrEz9QS5zhT5opfcee7eeK+bGm+GOu8l+XP3xn/gw/69N0oQ++bWrj+ynjmabXFsPSX8AL/qoq8=
+  </data>
+ </layer>
+</map>
