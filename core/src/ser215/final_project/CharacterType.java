@@ -1,6 +1,11 @@
 package ser215.final_project;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+
 import java.time.LocalDate;
+import java.time.Year;
 import java.time.temporal.ChronoUnit;
 
 /**
@@ -12,14 +17,17 @@ public class CharacterType {
     private String associatedHolidayName;
     private LocalDate associatedHolidayDate;
     private int characterPoints;
-    //private __Something__ characterImage;
+    private Texture characterImage;
+    private Sprite characterSprite;
 
     //Default constructor
     public CharacterType () {
-        this.name = "";
-        this.associatedHolidayName = "";
-        this.associatedHolidayDate.now();
-        this.characterPoints = 0;
+        this.name = "Frosty";
+        this.associatedHolidayName = "Christmas";
+        this.associatedHolidayDate.of(Year.now().getValue(),12,25);
+        this.characterPoints = 10;
+        this.characterImage = new Texture(Gdx.files.internal("Characters/Christmas_Snowman_Small.png"));
+        this.characterSprite = new Sprite(this.characterImage);
     }
 
     public CharacterType(String name, String associatedHolidayName, int year, int month, int day, int characterPoints) {
@@ -47,6 +55,13 @@ public class CharacterType {
         return characterPoints;
     }
 
+    public Texture getCharacterImage() {
+        return characterImage;
+    }
+
+    public Sprite getCharacterSprite() {
+        return characterSprite;
+    }
 
     //Other methods
 }

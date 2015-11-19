@@ -4,7 +4,9 @@ package ser215.final_project.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import ser215.final_project.GameInstance;
 import ser215.final_project.HolidayHustle;
+import ser215.final_project.Player;
 
 /**
  * Created by Brian on 11/17/2015.

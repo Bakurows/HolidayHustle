@@ -16,11 +16,11 @@ public class Player {
 
     //Default Constructor
     public Player() {
-        this.name = "";
-        this.character = null;  //Incomplete
+        this.name = "Default Player";
+        this.character = new CharacterType();  //Incomplete
         this.computerPlayer = true;
         this.boardLocation = 0;
-        this.activeCard = null; //Incomplete
+        //this.activeCard = null; //Incomplete
         this.turnSkips = 0;
     }
 
@@ -30,7 +30,7 @@ public class Player {
         this.computerPlayer = computerPlayer;
         this.boardLocation = 0;
         this.character = character;
-        this.activeCard = null; //Incomplete
+        //this.activeCard = null; //Incomplete
         this.turnSkips = 0;
     }
 
@@ -84,7 +84,7 @@ public class Player {
     //Other Methods
     public int rollDie() {
         Random rng = new Random();
-        return (rng.nextInt(11) + 2);
+        return (rng.nextInt(6) + 1);
     }
 
     public boolean winBattle(Player defender) {
@@ -92,8 +92,8 @@ public class Player {
         int defenderRoll = rollDie();
 
         //INSERT FORMULA FOR DETERMINING WINNER AFTER THIS
-        if ((attackerRoll + this.character.getCharacterPoints() + this.activeCard.getStatBoost()) > (defenderRoll + defender.character.getCharacterPoints() + defender.activeCard.getStatBoost()) ||
-                this.activeCard.winAttackBattle()) {
+        if ((attackerRoll + this.character.getCharacterPoints() /*+ this.activeCard.getStatBoost()*/) > (defenderRoll + defender.character.getCharacterPoints() /*+ defender.activeCard.getStatBoost()*/) /*||
+                this.activeCard.winAttackBattle()*/) {
             return true;
         }else {
             return false;
