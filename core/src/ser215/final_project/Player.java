@@ -10,8 +10,8 @@ public class Player {
     private boolean computerPlayer;
     private CharacterType character;
     private int boardLocation;
-    private PlayingCard activeCard;
-    private boolean losingTurn;
+    private PlayerPlayingCard activeCard;
+    private int turnSkips;
     private int playerNumber;
 
     //Default Constructor
@@ -21,7 +21,7 @@ public class Player {
         this.computerPlayer = true;
         this.boardLocation = 0;
         this.activeCard = null; //Incomplete
-        this.losingTurn = false;
+        this.turnSkips = 0;
     }
 
     //Three parameter constructor
@@ -31,7 +31,7 @@ public class Player {
         this.boardLocation = 0;
         this.character = character;
         this.activeCard = null; //Incomplete
-        this.losingTurn = false;
+        this.turnSkips = 0;
     }
 
 
@@ -56,8 +56,8 @@ public class Player {
         return activeCard;
     }
 
-    public boolean isLosingTurn() {
-        return losingTurn;
+    public int LosingTurnLeft() {
+        return turnSkips;
     }
 
     public int getPlayerNumber() {
@@ -69,12 +69,12 @@ public class Player {
         this.boardLocation += diceRoll;
     }
 
-    public void setActiveCard(PlayingCard activeCard) {
+    public void setActiveCard(PlayerPlayingCard activeCard) {
         this.activeCard = activeCard;
     }
 
-    public void alternateLosingTurn() {
-        this.losingTurn = !this.losingTurn;
+    public void incrementLosingTurn(int amountChanged) {
+        this.turnSkips += amountChanged;
     }
 
     public void setPlayerNumber(int playerNumber) {
@@ -92,7 +92,8 @@ public class Player {
         int defenderRoll = rollDie();
 
         //INSERT FORMULA FOR DETERMINING WINNER AFTER THIS
-        if (attackerRoll > defenderRoll) {
+        if ((attackerRoll + this.character.getCharacterPoints() + this.activeCard.getStatBoost()) > (defenderRoll + defender.character.getCharacterPoints() + defender.activeCard.getStatBoost()) ||
+                this.activeCard.winAttackBattle()) {
             return true;
         }else {
             return false;

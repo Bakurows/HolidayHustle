@@ -5,19 +5,18 @@ package ser215.final_project;
  */
 
 //Should be abstract??
-public class PlayingCard {
+public abstract class PlayingCard {
     private String name;
-    private int id;
 
 
     //Default constructor
     public PlayingCard() {
+        name = "None";
     }
 
     //Two parameter constructor
-    public PlayingCard(String name, int id) {
+    public PlayingCard(String name) {
         this.name = name;
-        this.id = id;
     }
 
 
@@ -26,7 +25,8 @@ public class PlayingCard {
         return name;
     }
 
-    public int getId() {
-        return id;
-    }
+
+
+    //Other Methods
+    public abstract void performAction();
 }

@@ -30,6 +30,8 @@ public class GameScreen implements Screen {
         game.batch.draw(board, 0, 0);
         game.batch.end();
         //Add stuff here
+
+
     }
 
     @Override
@@ -41,6 +43,8 @@ public class GameScreen implements Screen {
     public void show() {
         board = new Texture(Gdx.files.internal("board.jpg"));
         //Add stuff here
+
+
     }
 
     @Override

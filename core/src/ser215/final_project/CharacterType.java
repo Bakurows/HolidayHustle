@@ -1,8 +1,7 @@
 package ser215.final_project;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 /**
  * Created by Brian on 11/16/2015.
@@ -11,25 +10,23 @@ import java.util.Date;
 public class CharacterType {
     private String name;
     private String associatedHolidayName;
-    private Date associatedHolidayDate;
+    private LocalDate associatedHolidayDate;
     private int characterPoints;
+    //private __Something__ characterImage;
 
     //Default constructor
     public CharacterType () {
         this.name = "";
         this.associatedHolidayName = "";
-        this.associatedHolidayDate = new Date();
+        this.associatedHolidayDate.now();
         this.characterPoints = 0;
     }
 
     public CharacterType(String name, String associatedHolidayName, int year, int month, int day, int characterPoints) {
-        Calendar cal = Calendar.getInstance();
-        cal.set(year, month, day);
-
         this.name = name;
         this.associatedHolidayName = associatedHolidayName;
-        this.associatedHolidayDate = cal.getTime();
-        this.characterPoints = characterPoints;
+        this.associatedHolidayDate.of(year,month,day);
+        this.characterPoints = (5 + (int)(3 * (5 - ((Math.abs(ChronoUnit.DAYS.between(LocalDate.now(), this.associatedHolidayDate))) / 36.4))));
     }
 
 
@@ -42,7 +39,7 @@ public class CharacterType {
         return associatedHolidayName;
     }
 
-    public Date getAssociatedHolidayDate() {
+    public LocalDate getAssociatedHolidayDate() {
         return associatedHolidayDate;
     }
 
