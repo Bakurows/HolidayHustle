@@ -381,6 +381,7 @@ public class GameInstance {
             case 116: coords[0] = 864; coords[1] = 32;
                 break;
             default: coords[0] = 960 / 2 - 64; coords[1] = 960 / 2;
+                //Temp Comment
         }
 
 
