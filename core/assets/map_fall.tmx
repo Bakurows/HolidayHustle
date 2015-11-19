@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="32" tileheight="32" nextobjectid="1">
  <tileset firstgid="1" name="DungeonCrawl_ProjectUtumnoTileset" tilewidth="32" tileheight="32" tilecount="3072">
-  <image source="../../../../../../../Program Files (x86)/Tiled/tilesets/DungeonCrawl_ProjectUtumnoTileset.png" width="2048" height="1536"/>
+  <image source="tiles/DungeonCrawl_ProjectUtumnoTileset.png" width="2048" height="1536"/>
   <tile id="511">
    <animation>
     <frame tileid="670" duration="100"/>
@@ -16,13 +16,13 @@
   </tile>
  </tileset>
  <tileset firstgid="3073" name="hyptosis_tile-art-batch-1" tilewidth="32" tileheight="32" tilecount="900">
-  <image source="../../../../../../../Program Files (x86)/Tiled/tilesets/hyptosis_tile-art-batch-1.png" width="960" height="960"/>
+  <image source="tiles/hyptosis_tile-art-batch-1.png" width="960" height="960"/>
  </tileset>
  <tileset firstgid="3973" name="hyptosis_til-art-batch-2" tilewidth="32" tileheight="32" tilecount="900">
-  <image source="../../../../../../../Program Files (x86)/Tiled/tilesets/hyptosis_til-art-batch-2.png" width="960" height="960"/>
+  <image source="tiles/hyptosis_til-art-batch-2.png" width="960" height="960"/>
  </tileset>
  <tileset firstgid="4873" name="lpc leaf recolors" tilewidth="32" tileheight="32" tilecount="20">
-  <image source="../../../../../../../Program Files (x86)/Tiled/tilesets/lpc leaf recolors.png" width="128" height="160"/>
+  <image source="tiles/lpc leaf recolors.png" width="128" height="160"/>
   <tile id="12">
    <animation>
     <frame tileid="8" duration="100"/>
