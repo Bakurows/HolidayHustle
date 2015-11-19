@@ -84,7 +84,7 @@ public class GameScreen implements Screen, InputProcessor {
         renderer = new OrthogonalTiledMapRenderer(map);
 
         camera = new OrthographicCamera();
-        camera.position.set(960 / 2, 960 / 2,0);
+        camera.position.set(960 / 2, 960 / 2, 0);
 
         Gdx.input.setInputProcessor(this);
 
@@ -123,7 +123,7 @@ public class GameScreen implements Screen, InputProcessor {
     }
 
     @Override public boolean keyUp(int keycode) {
-        if(keycode == Input.Keys.NUM_1)
+        /*if(keycode == Input.Keys.NUM_1)
             demoPlayer.increaseBoardLocation(1);
         if(keycode == Input.Keys.NUM_2)
             demoPlayer.increaseBoardLocation(2);
@@ -134,7 +134,7 @@ public class GameScreen implements Screen, InputProcessor {
         if(keycode == Input.Keys.NUM_5)
             demoPlayer.increaseBoardLocation(5);
         if(keycode == Input.Keys.NUM_6)
-            demoPlayer.increaseBoardLocation(6);
+            demoPlayer.increaseBoardLocation(6);*/
 
 
         if(keycode == Input.Keys.ENTER)
@@ -159,6 +159,27 @@ public class GameScreen implements Screen, InputProcessor {
         if(keycode == Input.Keys.NUMPAD_8)
             gameKeeper.movePlayer(2,2);
         if(keycode == Input.Keys.NUMPAD_9)
+            gameKeeper.movePlayer(2,4);
+
+        if(keycode == Input.Keys.NUM_1)
+            gameKeeper.movePlayer(0,1);
+        if(keycode == Input.Keys.NUM_2)
+            gameKeeper.movePlayer(0,2);
+        if(keycode == Input.Keys.NUM_3)
+            gameKeeper.movePlayer(0,4);
+
+        if(keycode == Input.Keys.NUM_4)
+            gameKeeper.movePlayer(1,1);
+        if(keycode == Input.Keys.NUM_5)
+            gameKeeper.movePlayer(1,2);
+        if(keycode == Input.Keys.NUM_6)
+            gameKeeper.movePlayer(1,4);
+
+        if(keycode == Input.Keys.NUM_7)
+            gameKeeper.movePlayer(2,1);
+        if(keycode == Input.Keys.NUM_8)
+            gameKeeper.movePlayer(2,2);
+        if(keycode == Input.Keys.NUM_9)
             gameKeeper.movePlayer(2,4);
         return false;
     }
