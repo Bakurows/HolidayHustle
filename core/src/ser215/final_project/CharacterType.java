@@ -20,13 +20,13 @@ public class CharacterType {
     private Texture characterImage;
     private Sprite characterSprite;
 
-    //Default constructor
+    //Default constructor ... Default character is Frosty the snowman
     public CharacterType () {
         this.name = "Frosty";
         this.associatedHolidayName = "Christmas";
         this.associatedHolidayDate.of(Year.now().getValue(),12,25);
         this.characterPoints = 10;
-        this.characterImage = new Texture(Gdx.files.internal("Characters/Christmas_Snowman_Small.png"));
+        this.characterImage = new Texture(Gdx.files.internal("Characters/Piper_Small.png"));
         this.characterSprite = new Sprite(this.characterImage);
     }
 

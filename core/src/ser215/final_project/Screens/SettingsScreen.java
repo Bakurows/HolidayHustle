@@ -1,6 +1,5 @@
 package ser215.final_project.Screens;
 
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -18,33 +17,29 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import ser215.final_project.GameInstance;
 import ser215.final_project.HolidayHustle;
-import ser215.final_project.Player;
 
 import java.util.Random;
 
 /**
- * Created by Brian on 11/17/2015.
+ * Created by Brian on 11/30/2015.
  */
-public class MenuScreen implements Screen {
+public class SettingsScreen implements Screen {
     private HolidayHustle game;
     private Stage stage;
     private TextureAtlas atlas;
     private Skin skin;
     private Table table;
-    private TextButton buttonPlay, buttonSettings, buttonExit;
+    private TextButton buttonMenu;
     private BitmapFont fontStandard, fontLarge;
     private Label heading;
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
     private OrthographicCamera camera;
 
-    //Constructor
-    public MenuScreen(HolidayHustle game) {
+    public SettingsScreen(HolidayHustle game) {
         this.game = game;
     }
-
 
     @Override
     public void render(float delta) {
@@ -57,7 +52,9 @@ public class MenuScreen implements Screen {
         renderer.render();
 
         //stage.setDebugAll(true);
+
         stage.act(delta);
+
         stage.draw();
     }
 
@@ -103,6 +100,7 @@ public class MenuScreen implements Screen {
 
         //Creates font
         fontStandard = new BitmapFont(Gdx.files.internal("fonts/RegularFont.fnt"), false);
+
         fontLarge = new BitmapFont(Gdx.files.internal("fonts/LargeFont.fnt"), false);
 
         //Creating Buttons
@@ -114,118 +112,50 @@ public class MenuScreen implements Screen {
         textButtonStyle.font = fontStandard;
         textButtonStyle.fontColor = Color.BLACK;
 
-        buttonPlay = new TextButton("PLAY", textButtonStyle);
-        buttonPlay.addListener(new ClickListener() {
+        buttonMenu = new TextButton("MENU", textButtonStyle);
+        buttonMenu.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //game.setScreen(new GameScreen(game));
-                game.setScreen(new PreGameScreen(game));
+                game.setScreen(new MenuScreen(game));
             }
         });
-        buttonPlay.pad(5);
-
-        buttonSettings = new TextButton("SETTINGS", textButtonStyle);
-        buttonSettings.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new SettingsScreen(game));
-            }
-        });
-        buttonSettings.pad(5);
-
-        buttonExit = new TextButton("EXIT GAME", textButtonStyle);
-        buttonExit.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.exit();
-            }
-        });
-        buttonExit.pad(5);
-        buttonExit.getLabel().setFontScale(0.5f, 0.5f);
+        buttonMenu.pad(5);
 
         //Creating heading
         Label.LabelStyle headingStyle = new Label.LabelStyle(fontLarge, Color.WHITE);
-
-        heading = new Label("Holiday Hustle", headingStyle);
-        //heading.setFontScale(0.5f, 0.5f);
+        heading = new Label("Settings", headingStyle);
 
         //Adding stuff to table - to draw on screen
         table.add(heading);
         table.getCell(heading).spaceBottom(100);
         table.row();
-        table.add(buttonPlay);
-        table.getCell(buttonPlay).spaceBottom(50);
-        table.row();
-        table.add(buttonSettings);
-        table.getCell(buttonSettings).spaceBottom(50);
-        table.row();
-        table.add(buttonExit);
+        table.add(buttonMenu);
         table.top();
         stage.addActor(table);
-    }
 
-    @Override
-    public void hide() {
-        //Add stuff here
     }
 
     @Override
     public void pause() {
-        //Add stuff here
+
     }
 
     @Override
     public void resume() {
-        //Add stuff here
+
+    }
+
+    @Override
+    public void hide() {
+
     }
 
     @Override
     public void dispose() {
-        //Add stuff here
         stage.dispose();
         atlas.dispose();
         skin.dispose();
         fontStandard.dispose();
-        fontStandard.dispose();
+        fontLarge.dispose();
     }
 }
-
-
-
-
-/*
-    @Override
-    public void render(float delta) {
-        //Add stuff here
-    }
-
-    @Override
-    public void resize(int width, int height) {
-
-    }
-
-    @Override
-    public void show() {
-        //Add stuff here
-    }
-
-    @Override
-    public void hide() {
-        //Add stuff here
-    }
-
-    @Override
-    public void pause() {
-        //Add stuff here
-    }
-
-    @Override
-    public void resume() {
-        //Add stuff here
-    }
-
-    @Override
-    public void dispose() {
-        //Add stuff here
-    }
- */
