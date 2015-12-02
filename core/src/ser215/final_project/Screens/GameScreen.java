@@ -40,7 +40,7 @@ public class GameScreen implements Screen {
     private Stage stage;
     private Skin skin;
     private Table table;
-    private TextButton buttonRoll, buttonMenu;
+    private TextButton buttonRoll, buttonMenu, buttonShowCards;
     private BitmapFont fontBold;
 
 
@@ -140,6 +140,15 @@ public class GameScreen implements Screen {
             }
         });
         buttonRoll.pad(1);
+        
+        buttonShowCards = new TextButton("SHOW CARDS", skin);
+        buttonShowCards.addListener(new ClickListener() {
+        	@Override
+        	public void clicked(InputEvent event, float x, float y) {
+        		//Show cards in current players hand
+        	}
+        });
+        buttonShowCards.pad(1);
 
         buttonMenu = new TextButton("MENU", skin);
         buttonMenu.addListener(new ClickListener() {
@@ -154,6 +163,8 @@ public class GameScreen implements Screen {
         //Adding elements to the table, and the table to the stage
         table.add(buttonRoll);
         table.getCell(buttonRoll).spaceBottom(5);
+        table.row();
+        table.add(buttonShowCards);
         table.row();
         table.add(buttonMenu);
         table.getCell(buttonMenu).spaceTop(846);

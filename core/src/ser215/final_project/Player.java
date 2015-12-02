@@ -1,5 +1,6 @@
 package ser215.final_project;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -11,6 +12,7 @@ public class Player {
     private CharacterType character;
     private int boardLocation;
     private PlayerPlayingCard activeCard;
+    private ArrayList<PlayingCard> hand;
     private int turnSkips;
     private int playerNumber;
 
@@ -55,6 +57,10 @@ public class Player {
     public PlayingCard getActiveCard() {
         return activeCard;
     }
+    
+    public ArrayList<PlayingCard> getHand() {
+    	return hand;
+    }
 
     public int LosingTurnLeft() {
         return turnSkips;
@@ -85,6 +91,10 @@ public class Player {
     public int rollDie() {
         Random rng = new Random();
         return (rng.nextInt(6) + 1);
+    }
+    
+    public void drawCard(Deck deck) {
+    	hand.add(deck.drawCard());
     }
 
     public boolean winBattle(Player defender) {

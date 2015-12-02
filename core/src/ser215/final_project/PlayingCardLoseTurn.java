@@ -14,7 +14,7 @@ public class PlayingCardLoseTurn extends PlayingCard {
 
     //Name parameter constructor
     public PlayingCardLoseTurn(String name, int turnsLost) {
-        super(name);
+        super(name, turnsLost);
         this.turnsLost = turnsLost;
     }
 

@@ -14,7 +14,7 @@ public class PlayingCardGoBack extends PlayingCard {
 
     //2 parameter constructor
     public PlayingCardGoBack(String name, int spaceMoveBack) {
-        super(name);
+        super(name, spaceMoveBack);
         this.spaceMoveBack = spaceMoveBack;
     }
 

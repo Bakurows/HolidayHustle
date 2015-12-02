@@ -17,7 +17,7 @@ public class PlayerPlayingCard extends PlayingCard {
 
     //2 parameter constructor
     public PlayerPlayingCard(String name, boolean winAttackBattle, int statBoost) {
-        super(name);
+        super(name, statBoost);
         this.winAttackBattle = winAttackBattle;
         this.statBoost = statBoost;
     }

@@ -7,7 +7,7 @@ package ser215.final_project;
 //Should be abstract??
 public abstract class PlayingCard {
     private String name;
-
+    protected int tier;
 
     //Default constructor
     public PlayingCard() {
@@ -15,14 +15,19 @@ public abstract class PlayingCard {
     }
 
     //Two parameter constructor
-    public PlayingCard(String name) {
+    public PlayingCard(String name, int tier) {
         this.name = name;
+        this.tier = tier;
     }
 
 
     //Accessor Methods
     public String getName() {
         return name;
+    }
+    
+    public int getTier() {
+    	return tier;
     }
 
 
