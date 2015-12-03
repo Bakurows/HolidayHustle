@@ -24,16 +24,38 @@ public class CharacterType {
     public CharacterType () {
         this.name = "Frosty";
         this.associatedHolidayName = "Christmas";
-        this.associatedHolidayDate.of(Year.now().getValue(),12,25);
+        this.associatedHolidayDate = this.associatedHolidayDate.of(Year.now().getValue(),12,25);
         this.characterPoints = 10;
         this.characterImage = new Texture(Gdx.files.internal("Characters/Piper_Small.png"));
         this.characterSprite = new Sprite(this.characterImage);
     }
 
-    public CharacterType(String name, String associatedHolidayName, int year, int month, int day, int characterPoints) {
+    public CharacterType(String name) {
         this.name = name;
-        this.associatedHolidayName = associatedHolidayName;
-        this.associatedHolidayDate.of(year,month,day);
+
+        if(this.name.equals("Frosty")) {
+            this.characterImage = new Texture(Gdx.files.internal("Characters/Frosty_Small.png"));
+            this.characterSprite = new Sprite(this.characterImage);
+            this.associatedHolidayName = "Christmas";
+            this.associatedHolidayDate = this.associatedHolidayDate.of(Year.now().getValue(),12,25);
+        }else if (this.name.equals("Jack")) {
+            this.characterImage = new Texture(Gdx.files.internal("Characters/Jack_Small.png"));
+            this.characterSprite = new Sprite(this.characterImage);
+            this.associatedHolidayName = "Halloween";
+            this.associatedHolidayDate = this.associatedHolidayDate.of(Year.now().getValue(),10,31);
+        }else if (this.name.equals("Bugs")) {
+            this.characterImage = new Texture(Gdx.files.internal("Characters/Bugs_Small.png"));
+            this.characterSprite = new Sprite(this.characterImage);
+            this.associatedHolidayName = "Easter";
+            this.associatedHolidayDate = this.associatedHolidayDate.of(Year.now().getValue(),4,5); //Not exact, as easter changes year to year.
+        }else if (this.name.equals("Piper")) {
+            this.characterImage = new Texture(Gdx.files.internal("Characters/Piper_Small.png"));
+            this.characterSprite = new Sprite(this.characterImage);
+            this.associatedHolidayName = "Thanksgiving";
+            this.associatedHolidayDate = this.associatedHolidayDate.of(Year.now().getValue(),11,26); //Not exact, as easter changes year to year
+        }
+        //TODO Find a way to get exact date of Easter and Thanksgiving
+        //TODO Calculate character points for current year, following year, and preceding year. Set to highest value - January 1st currently gives lowest value for christmas
         this.characterPoints = (5 + (int)(3 * (5 - ((Math.abs(ChronoUnit.DAYS.between(LocalDate.now(), this.associatedHolidayDate))) / 36.4))));
     }
 

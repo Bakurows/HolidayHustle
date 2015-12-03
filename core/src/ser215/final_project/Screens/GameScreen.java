@@ -1,26 +1,21 @@
 package ser215.final_project.Screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import ser215.final_project.GameInstance;
+import ser215.final_project.GameKeeper;
 import ser215.final_project.HolidayHustle;
-import ser215.final_project.Player;
 
+import javax.xml.soap.Text;
 import java.time.LocalDate;
 import java.time.Year;
 
@@ -29,30 +24,33 @@ import java.time.Year;
  */
 public class GameScreen implements Screen {
     private HolidayHustle game;
-    private GameInstance gameKeeper;
+    private GameKeeper gameKeeper;
     private SpriteBatch sb;
     //For the game map
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
     private OrthographicCamera camera;
     private LocalDate tempDate;
+    private String activeMap;
     //For buttons
     private Stage stage;
     private Skin skin;
     private Table table;
     private TextButton buttonRoll, buttonMenu, buttonShowCards;
-    private BitmapFont fontBold;
+    private TextField currentPlayerTurn;
 
 
     public GameScreen(HolidayHustle game) {
         this.game = game;
+
+        this.gameKeeper = new GameKeeper();
     }
 
-    /*public GameScreen(HolidayHustle game) {
+    public GameScreen(HolidayHustle game, GameKeeper theGameKeeper) {
         this.game = game;
 
-        gameKeeper = new GameInstance();
-    }*/
+        this.gameKeeper = theGameKeeper;
+    }
 
     @Override
     public void render(float delta) {
@@ -65,22 +63,32 @@ public class GameScreen implements Screen {
         renderer.setView(camera);
         renderer.render();
 
+        //TODO Rewrite below with loop
         sb.begin();
-        gameKeeper.getPlayersList()[0].getCharacter().getCharacterSprite().setPosition(GameInstance.getCoords(gameKeeper.getPlayersList()[0].getBoardLocation())[0], GameInstance.getCoords(gameKeeper.getPlayersList()[0].getBoardLocation())[1]);
+        for (int i = 0; i < gameKeeper.getNumberPlayers(); i++) {
+            gameKeeper.getPlayersList()[i].getCharacter().getCharacterSprite().setPosition(GameKeeper.getCoords(gameKeeper.getPlayersList()[i].getBoardLocation(), activeMap)[0], GameKeeper.getCoords(gameKeeper.getPlayersList()[i].getBoardLocation(), activeMap)[1]);
+            gameKeeper.getPlayersList()[i].getCharacter().getCharacterSprite().draw(sb);
+        }
+        /*gameKeeper.getPlayersList()[0].getCharacter().getCharacterSprite().setPosition(GameKeeper.getCoords(gameKeeper.getPlayersList()[0].getBoardLocation())[0], GameKeeper.getCoords(gameKeeper.getPlayersList()[0].getBoardLocation())[1]);
         gameKeeper.getPlayersList()[0].getCharacter().getCharacterSprite().draw(sb);
 
-        gameKeeper.getPlayersList()[1].getCharacter().getCharacterSprite().setPosition(GameInstance.getCoords(gameKeeper.getPlayersList()[1].getBoardLocation())[0], GameInstance.getCoords(gameKeeper.getPlayersList()[1].getBoardLocation())[1]);
+        gameKeeper.getPlayersList()[1].getCharacter().getCharacterSprite().setPosition(GameKeeper.getCoords(gameKeeper.getPlayersList()[1].getBoardLocation())[0], GameKeeper.getCoords(gameKeeper.getPlayersList()[1].getBoardLocation())[1]);
         gameKeeper.getPlayersList()[1].getCharacter().getCharacterSprite().draw(sb);
 
-        gameKeeper.getPlayersList()[2].getCharacter().getCharacterSprite().setPosition(GameInstance.getCoords(gameKeeper.getPlayersList()[2].getBoardLocation())[0], GameInstance.getCoords(gameKeeper.getPlayersList()[2].getBoardLocation())[1]);
-        gameKeeper.getPlayersList()[2].getCharacter().getCharacterSprite().draw(sb);
+        gameKeeper.getPlayersList()[2].getCharacter().getCharacterSprite().setPosition(GameKeeper.getCoords(gameKeeper.getPlayersList()[2].getBoardLocation())[0], GameKeeper.getCoords(gameKeeper.getPlayersList()[2].getBoardLocation())[1]);
+        gameKeeper.getPlayersList()[2].getCharacter().getCharacterSprite().draw(sb);*/
         sb.end();
 
         //Displays the current players turn
-        sb.begin();
-        fontBold.setColor(Color.BLACK);
-        fontBold.draw(sb, gameKeeper.getPlayersList()[0].getName() + "'s Turn!" + gameKeeper.getCurrentPlayerTurn(), 34, Gdx.graphics.getHeight());
-        sb.end();
+        currentPlayerTurn.setText(gameKeeper.getPlayersList()[gameKeeper.getCurrentPlayerTurn()].getName() + "'s Turn!" + gameKeeper.getCurrentPlayerTurn());
+
+        //Automatic Turn for computer Players
+        if (gameKeeper.getPlayersList()[gameKeeper.getCurrentPlayerTurn()].isComputerPlayer()) {
+            gameKeeper.nextTurn();
+        }
+
+        //TODO Remove the following temp code to skip winning player turn... Replace with game over
+        //if (gameKeeper.getPlayersList()[gameKeeper.getCurrentPlayerTurn()].getBoardLocation() > gameKeeper.)
 
         //Draws items from stage on screen and allows them to "act"
         stage.act(delta);
@@ -100,14 +108,24 @@ public class GameScreen implements Screen {
         //Selects the map based on current season - not exact, uses approximated day
         if (LocalDate.now().isAfter(tempDate.of(Year.now().getValue(), 9, 22)) && LocalDate.now().isBefore(tempDate.of(Year.now().getValue(), 12, 21))) {
             map = new TmxMapLoader().load("map_fall.tmx");
+            activeMap = "Fall";
+            gameKeeper.setLastBoardLocation(117);
         } else if (LocalDate.now().isAfter(tempDate.of(Year.now().getValue(), 12, 20)) && LocalDate.now().isBefore(tempDate.of(Year.now().getValue() + 1, 1, 1))) {
             map = new TmxMapLoader().load("map_winter.tmx");
+            activeMap = "Winter";
+            gameKeeper.setLastBoardLocation(105);
         } else if (LocalDate.now().isAfter(tempDate.of(Year.now().getValue() - 1, 12, 31)) && LocalDate.now().isBefore(tempDate.of(Year.now().getValue(), 3, 20))) {
             map = new TmxMapLoader().load("map_winter.tmx");
+            activeMap = "Winter";
+            gameKeeper.setLastBoardLocation(105);
         } else if (LocalDate.now().isAfter(tempDate.of(Year.now().getValue(), 3, 19)) && LocalDate.now().isBefore(tempDate.of(Year.now().getValue(), 6, 21))) {
             map = new TmxMapLoader().load("map_spring.tmx");
+            activeMap = "Spring";
+            gameKeeper.setLastBoardLocation(117);
         } else if (LocalDate.now().isAfter(tempDate.of(Year.now().getValue(), 6, 20)) && LocalDate.now().isBefore(tempDate.of(Year.now().getValue(), 9, 23))) {
             map = new TmxMapLoader().load("map_summer.tmx");
+            activeMap = "Summer";
+            gameKeeper.setLastBoardLocation(117);
         }
 
         //Renders the map
@@ -116,7 +134,7 @@ public class GameScreen implements Screen {
         camera.position.set(960 / 2, 960 / 2, 0);
 
         sb = new SpriteBatch();
-        gameKeeper = new GameInstance();
+        //gameKeeper = new GameKeeper();
 
         //Creates stage - allows things (buttons, SelectBoxes, TextFields, etc.) to be drawn on screen
         stage = new Stage();
@@ -128,9 +146,13 @@ public class GameScreen implements Screen {
         table = new Table(skin);
         table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        //Creates font
-        fontBold = new BitmapFont(Gdx.files.internal("fonts/BoldFont.fnt"), false);
 
+        //Textfield displaying current players turn
+        currentPlayerTurn = new TextField("", skin);
+        currentPlayerTurn.setDisabled(true);
+        currentPlayerTurn.setWidth(360);
+        currentPlayerTurn.setPosition(Gdx.graphics.getWidth() / 2 - currentPlayerTurn.getWidth() / 2, Gdx.graphics.getHeight() - currentPlayerTurn.getHeight());
+        
         //Creating Buttons
         buttonRoll = new TextButton("ROLL", skin);
         buttonRoll.addListener(new ClickListener() {
@@ -164,14 +186,15 @@ public class GameScreen implements Screen {
         table.add(buttonRoll);
         table.getCell(buttonRoll).spaceBottom(5);
         table.row();
-        table.add(buttonShowCards);
-        table.row();
+        /*table.add(buttonShowCards);
+        table.row();*/
         table.add(buttonMenu);
         table.getCell(buttonMenu).spaceTop(846);
         table.getCell(buttonMenu).right();
         table.top();
         table.right();
         stage.addActor(table);
+        stage.addActor(currentPlayerTurn);
     }
 
     @Override

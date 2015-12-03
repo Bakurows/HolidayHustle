@@ -27,11 +27,11 @@ public class Player {
     }
 
     //Three parameter constructor
-    public Player(String name, boolean computerPlayer, CharacterType character) {
+    public Player(String name, boolean computerPlayer, String characterName) {
         this.name = name;
         this.computerPlayer = computerPlayer;
         this.boardLocation = 0;
-        this.character = character;
+        this.character = new CharacterType(characterName);
         //this.activeCard = null; //Incomplete
         this.turnSkips = 0;
     }

@@ -48,6 +48,7 @@ public class SettingsScreen implements Screen {
         stage.act(delta);
         stage.draw();
     }
+    //gameKeeper = new GameKeeper(Integer.parseInt(numberOfPlayers.getSelected()), names, iscomputerPlayer, characterNames);
 
     @Override
     public void resize(int width, int height) {
