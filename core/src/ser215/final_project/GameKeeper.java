@@ -76,9 +76,9 @@ public class GameKeeper {
     }
 
     public void incrementPlayerTurn() {
-        System.out.println("Current Player: " + this.currentPlayerTurn);
+        //System.out.println("Current Player: " + this.currentPlayerTurn);
         this.currentPlayerTurn = ((this.currentPlayerTurn + 1) % getNumberPlayers());
-        System.out.println("Current Player: " + this.currentPlayerTurn);
+        //System.out.println("Current Player: " + this.currentPlayerTurn);
     }
 
     public void setLastBoardLocation(int lastBoardLocation) {
@@ -89,6 +89,7 @@ public class GameKeeper {
     //Begins the next players turn
     public void nextTurn() {
         int dieRoll = this.playersList[this.currentPlayerTurn].rollDie();
+        System.out.println(this.playersList[this.currentPlayerTurn].getName() + " " + this.playersList[this.currentPlayerTurn].getBoardLocation() + ": " + dieRoll);
         movePlayer(this.currentPlayerTurn, dieRoll);
 
         incrementPlayerTurn();

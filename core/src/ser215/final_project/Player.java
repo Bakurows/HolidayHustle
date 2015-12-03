@@ -1,7 +1,9 @@
 package ser215.final_project;
 
+import com.badlogic.gdx.math.MathUtils;
+
 import java.util.ArrayList;
-import java.util.Random;
+//import java.util.Random;
 
 /**
  * Created by Brian on 11/16/2015.
@@ -89,8 +91,12 @@ public class Player {
 
     //Other Methods
     public int rollDie() {
-        Random rng = new Random();
-        return (rng.nextInt(6) + 1);
+        /*Random rng = new Random();
+        return (rng.nextInt(6) + 1);*/
+        int random = MathUtils.random(5) + 1;
+        //System.out.println(random);
+        //return random;
+        return 1;
     }
     
     public void drawCard(Deck deck) {

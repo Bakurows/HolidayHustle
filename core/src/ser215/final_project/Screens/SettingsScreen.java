@@ -95,6 +95,7 @@ public class SettingsScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new MenuScreen(game));
+                dispose();
             }
         });
         buttonMenu.pad(5);
@@ -136,5 +137,6 @@ public class SettingsScreen implements Screen {
         skin.dispose();
         renderer.dispose();
         map.dispose();
+        System.out.println("Doing Stuff");
     }
 }

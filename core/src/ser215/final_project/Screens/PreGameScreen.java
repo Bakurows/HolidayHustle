@@ -4,6 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -11,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import ser215.final_project.GameKeeper;
 import ser215.final_project.HolidayHustle;
 
@@ -25,11 +29,13 @@ public class PreGameScreen implements Screen {
     private GameKeeper gameKeeper;
     private String[] names, characterNames;
     private boolean[] iscomputerPlayer;
+    private Texture[] charTextures;
+    private Image[] charImages;
     private Stage stage;
     private Table table;
     private Skin skin;
     private SelectBox<String> numberOfPlayers;
-    private SelectBox<String> playerOneCharacter, playerTwoCharacter, playerThreeCharacter, playerFourCharacter, playerFiveCharacter, playerSixCharacter;
+    private SelectBox<String>[] playerCharacters; //playerOneCharacter, playerTwoCharacter, playerThreeCharacter, playerFourCharacter, playerFiveCharacter, playerSixCharacter;
     private SelectBox<String>[] computerPlayerBoxes; //computerPlayerOne, computerPlayerTwo, computerPlayerThree, computerPlayerFour, computerPlayerFive, computerPlayerSix;
     private TextField numberOfPlayersText;
     private TextField playerOneName, playerTwoName, playerThreeName, playerFourName, playerFiveName, playerSixName;
@@ -42,7 +48,9 @@ public class PreGameScreen implements Screen {
         this.game = game;
         numPlayers = new String[]{"3", "4", "5", "6"};
         characterChoices = new String[] {"Frosty", "Jack", "Bugs", "Piper"};
-        computerPlayers = new String [] {"Person", "Computer"};
+        //computerPlayers = new String [] {"Person", "Computer"};
+        computerPlayers = new String [] {"Computer", "Person"};
+        playerCharacters = new SelectBox[6];
         computerPlayerBoxes = new SelectBox[6];
     }
 
@@ -64,12 +72,12 @@ public class PreGameScreen implements Screen {
             playerFourName.setText("Player Four Name");
             playerFiveName.setText("Player Five Name");
             playerSixName.setText("Player Six Name");
-            playerFourCharacter.setDisabled(true);
-            playerFiveCharacter.setDisabled(true);
-            playerSixCharacter.setDisabled(true);
-            playerFourCharacter.setSelectedIndex(0);
-            playerFiveCharacter.setSelectedIndex(0);
-            playerSixCharacter.setSelectedIndex(0);
+            playerCharacters[3].setDisabled(true);
+            playerCharacters[4].setDisabled(true);
+            playerCharacters[5].setDisabled(true);
+            playerCharacters[3].setSelectedIndex(0);
+            playerCharacters[4].setSelectedIndex(0);
+            playerCharacters[5].setSelectedIndex(0);
             computerPlayerBoxes[3].setDisabled(true);
             computerPlayerBoxes[4].setDisabled(true);
             computerPlayerBoxes[5].setDisabled(true);
@@ -82,11 +90,11 @@ public class PreGameScreen implements Screen {
             playerSixName.setDisabled(true);
             playerFiveName.setText("Player Five Name");
             playerSixName.setText("Player Six Name");
-            playerFourCharacter.setDisabled(false);
-            playerFiveCharacter.setDisabled(true);
-            playerSixCharacter.setDisabled(true);
-            playerFiveCharacter.setSelectedIndex(0);
-            playerSixCharacter.setSelectedIndex(0);
+            playerCharacters[3].setDisabled(false);
+            playerCharacters[4].setDisabled(true);
+            playerCharacters[5].setDisabled(true);
+            playerCharacters[4].setSelectedIndex(0);
+            playerCharacters[5].setSelectedIndex(0);
             computerPlayerBoxes[3].setDisabled(false);
             computerPlayerBoxes[4].setDisabled(true);
             computerPlayerBoxes[5].setDisabled(true);
@@ -97,10 +105,10 @@ public class PreGameScreen implements Screen {
             playerFiveName.setDisabled(false);
             playerSixName.setDisabled(true);
             playerSixName.setText("Player Six Name");
-            playerFourCharacter.setDisabled(false);
-            playerFiveCharacter.setDisabled(false);
-            playerSixCharacter.setDisabled(true);
-            playerSixCharacter.setSelectedIndex(0);
+            playerCharacters[3].setDisabled(false);
+            playerCharacters[4].setDisabled(false);
+            playerCharacters[5].setDisabled(true);
+            playerCharacters[5].setSelectedIndex(0);
             computerPlayerBoxes[3].setDisabled(false);
             computerPlayerBoxes[4].setDisabled(false);
             computerPlayerBoxes[5].setDisabled(true);
@@ -109,12 +117,28 @@ public class PreGameScreen implements Screen {
             playerFourName.setDisabled(false);
             playerFiveName.setDisabled(false);
             playerSixName.setDisabled(false);
-            playerFourCharacter.setDisabled(false);
-            playerFiveCharacter.setDisabled(false);
-            playerSixCharacter.setDisabled(false);
+            playerCharacters[3].setDisabled(false);
+            playerCharacters[4].setDisabled(false);
+            playerCharacters[5].setDisabled(false);
             computerPlayerBoxes[3].setDisabled(false);
             computerPlayerBoxes[4].setDisabled(false);
             computerPlayerBoxes[5].setDisabled(false);
+        }
+
+        for (int i = 0; i < 6; i++) {
+            if (playerCharacters[i].getSelected().equals("Frosty")) {
+                charTextures[i] = new Texture(Gdx.files.internal("Characters/Frosty_Medium.png"));
+                charImages[i].setDrawable(new SpriteDrawable(new Sprite(charTextures[i])));
+            }else if (playerCharacters[i].getSelected().equals("Jack")) {
+                charTextures[i] = new Texture(Gdx.files.internal("Characters/Jack_Medium.png"));
+                charImages[i].setDrawable(new SpriteDrawable(new Sprite(charTextures[i])));
+            }else if (playerCharacters[i].getSelected().equals("Bugs")) {
+                charTextures[i] = new Texture(Gdx.files.internal("Characters/Bugs_Medium.png"));
+                charImages[i].setDrawable(new SpriteDrawable(new Sprite(charTextures[i])));
+            }else if (playerCharacters[i].getSelected().equals("Piper")) {
+                charTextures[i] = new Texture(Gdx.files.internal("Characters/Piper_Medium.png"));
+                charImages[i].setDrawable(new SpriteDrawable(new Sprite(charTextures[i])));
+            }
         }
 
         stage.act(delta);
@@ -186,33 +210,33 @@ public class PreGameScreen implements Screen {
         playerSixName.setMaxLength(16);
 
         //Player character fields for players to choose their characters.
-        playerOneCharacter = new SelectBox<String>(skin);
-        playerOneCharacter.setItems(characterChoices);
-        playerOneCharacter.setWidth(90);
+        playerCharacters[0] = new SelectBox<String>(skin);
+        playerCharacters[0].setItems(characterChoices);
+        playerCharacters[0].setWidth(90);
 
-        playerTwoCharacter = new SelectBox<String>(skin);
-        playerTwoCharacter.setItems(characterChoices);
-        playerTwoCharacter.setWidth(90);
+        playerCharacters[1] = new SelectBox<String>(skin);
+        playerCharacters[1].setItems(characterChoices);
+        playerCharacters[1].setWidth(90);
         //Temp
-        playerTwoCharacter.setSelectedIndex(1);
+        playerCharacters[1].setSelectedIndex(1);
 
-        playerThreeCharacter = new SelectBox<String>(skin);
-        playerThreeCharacter.setItems(characterChoices);
-        playerThreeCharacter.setWidth(90);
+        playerCharacters[2] = new SelectBox<String>(skin);
+        playerCharacters[2].setItems(characterChoices);
+        playerCharacters[2].setWidth(90);
         //Temp
-        playerThreeCharacter.setSelectedIndex(2);
+        playerCharacters[2].setSelectedIndex(2);
 
-        playerFourCharacter = new SelectBox<String>(skin);
-        playerFourCharacter.setItems(characterChoices);
-        playerFourCharacter.setWidth(90);
+        playerCharacters[3] = new SelectBox<String>(skin);
+        playerCharacters[3].setItems(characterChoices);
+        playerCharacters[3].setWidth(90);
 
-        playerFiveCharacter = new SelectBox<String>(skin);
-        playerFiveCharacter.setItems(characterChoices);
-        playerFiveCharacter.setWidth(90);
+        playerCharacters[4] = new SelectBox<String>(skin);
+        playerCharacters[4].setItems(characterChoices);
+        playerCharacters[4].setWidth(90);
 
-        playerSixCharacter = new SelectBox<String>(skin);
-        playerSixCharacter.setItems(characterChoices);
-        playerSixCharacter.setWidth(90);
+        playerCharacters[5] = new SelectBox<String>(skin);
+        playerCharacters[5].setItems(characterChoices);
+        playerCharacters[5].setWidth(90);
 
         //Select whether each player is computer or person
         computerPlayerBoxes[0] = new SelectBox<String>(skin);
@@ -249,26 +273,26 @@ public class PreGameScreen implements Screen {
                 characterNames = new String[Integer.parseInt(numberOfPlayers.getSelected())];
                 iscomputerPlayer = new boolean[Integer.parseInt(numberOfPlayers.getSelected())];
                 names[0] = playerOneName.getText();
-                characterNames[0] = playerOneCharacter.getSelected();
+                characterNames[0] = playerCharacters[0].getSelected();
                 names[1] = playerTwoName.getText();
-                characterNames[1] = playerTwoCharacter.getSelected();
+                characterNames[1] = playerCharacters[1].getSelected();
                 names[2] = playerThreeName.getText();
-                characterNames[2] = playerThreeCharacter.getSelected();
+                characterNames[2] = playerCharacters[2].getSelected();
                 if (numberOfPlayers.getSelected().equals("4")) {
                     names[3] = playerFourName.getText();
-                    characterNames[3] = playerFourCharacter.getSelected();
+                    characterNames[3] = playerCharacters[3].getSelected();
                 }else if (numberOfPlayers.getSelected().equals("5")) {
                     names[3] = playerFourName.getText();
-                    characterNames[3] = playerFourCharacter.getSelected();
+                    characterNames[3] = playerCharacters[3].getSelected();
                     names[4] = playerFiveName.getText();
-                    characterNames[4] = playerFiveCharacter.getSelected();
+                    characterNames[4] = playerCharacters[4].getSelected();
                 }else if (numberOfPlayers.getSelected().equals("6")) {
                     names[3] = playerFourName.getText();
-                    characterNames[3] = playerFourCharacter.getSelected();
+                    characterNames[3] = playerCharacters[3].getSelected();
                     names[4] = playerFiveName.getText();
-                    characterNames[4] = playerFiveCharacter.getSelected();
+                    characterNames[4] = playerCharacters[4].getSelected();
                     names[5] = playerSixName.getText();
-                    characterNames[5] = playerSixCharacter.getSelected();
+                    characterNames[5] = playerCharacters[5].getSelected();
                 }
 
                 for (int i = 0; i < Integer.parseInt(numberOfPlayers.getSelected()); i++) {
@@ -281,6 +305,7 @@ public class PreGameScreen implements Screen {
 
                 gameKeeper = new GameKeeper(Integer.parseInt(numberOfPlayers.getSelected()), names, iscomputerPlayer, characterNames);
                 game.setScreen(new GameScreen(game, gameKeeper));
+                dispose();
             }
         });
         //Menu button to return to the Menu
@@ -290,23 +315,31 @@ public class PreGameScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new MenuScreen(game));
+                dispose();
             }
         });
 
         //TODO Add sprites to show which character they have selected, and the current strength of that character
         //TODO Might be easy by adding CharacterType objects to the screen???
-
+        charTextures = new Texture[6];
+        charImages = new Image[6];
+        for (int i = 0; i < 6; i++) {
+            charTextures[i] = new Texture(Gdx.files.internal("Characters/Frosty_Medium.png"));
+            charImages[i] = new Image(charTextures[i]);
+        }
 
         //Adding items to table for positioning
         table.add(playerOneName);
         table.getCell(playerOneName).width(265);
         table.getCell(playerOneName).spaceBottom(25);
         table.getCell(playerOneName).spaceRight(35);
-        table.add(playerOneCharacter);
-        table.getCell(playerOneCharacter).spaceBottom(25);
-        table.getCell(playerOneCharacter).spaceRight(35);
+        table.add(playerCharacters[0]);
+        table.getCell(playerCharacters[0]).spaceBottom(25);
+        table.getCell(playerCharacters[0]).spaceRight(35);
         table.add(computerPlayerBoxes[0]);
         table.getCell(computerPlayerBoxes[0]).spaceBottom(25);
+        table.getCell(computerPlayerBoxes[0]).spaceRight(35);
+        table.add(charImages[0]);
 
         table.row();
 
@@ -314,11 +347,13 @@ public class PreGameScreen implements Screen {
         table.getCell(playerTwoName).width(265);
         table.getCell(playerTwoName).spaceBottom(25);
         table.getCell(playerTwoName).spaceRight(35);
-        table.add(playerTwoCharacter);
-        table.getCell(playerTwoCharacter).spaceBottom(25);
-        table.getCell(playerTwoCharacter).spaceRight(35);
+        table.add(playerCharacters[1]);
+        table.getCell(playerCharacters[1]).spaceBottom(25);
+        table.getCell(playerCharacters[1]).spaceRight(35);
         table.add(computerPlayerBoxes[1]);
         table.getCell(computerPlayerBoxes[1]).spaceBottom(25);
+        table.getCell(computerPlayerBoxes[1]).spaceRight(35);
+        table.add(charImages[1]);
 
         table.row();
 
@@ -326,11 +361,13 @@ public class PreGameScreen implements Screen {
         table.getCell(playerThreeName).width(265);
         table.getCell(playerThreeName).spaceBottom(25);
         table.getCell(playerThreeName).spaceRight(35);
-        table.add(playerThreeCharacter);
-        table.getCell(playerThreeCharacter).spaceBottom(25);
-        table.getCell(playerThreeCharacter).spaceRight(35);
+        table.add(playerCharacters[2]);
+        table.getCell(playerCharacters[2]).spaceBottom(25);
+        table.getCell(playerCharacters[2]).spaceRight(35);
         table.add(computerPlayerBoxes[2]);
         table.getCell(computerPlayerBoxes[2]).spaceBottom(25);
+        table.getCell(computerPlayerBoxes[2]).spaceRight(35);
+        table.add(charImages[2]);
 
         table.row();
 
@@ -338,11 +375,13 @@ public class PreGameScreen implements Screen {
         table.getCell(playerFourName).width(265);
         table.getCell(playerFourName).spaceBottom(25);
         table.getCell(playerFourName).spaceRight(35);
-        table.add(playerFourCharacter);
-        table.getCell(playerFourCharacter).spaceBottom(25);
-        table.getCell(playerFourCharacter).spaceRight(35);
+        table.add(playerCharacters[3]);
+        table.getCell(playerCharacters[3]).spaceBottom(25);
+        table.getCell(playerCharacters[3]).spaceRight(35);
         table.add(computerPlayerBoxes[3]);
         table.getCell(computerPlayerBoxes[3]).spaceBottom(25);
+        table.getCell(computerPlayerBoxes[3]).spaceRight(35);
+        table.add(charImages[3]);
 
         table.row();
 
@@ -350,21 +389,25 @@ public class PreGameScreen implements Screen {
         table.getCell(playerFiveName).width(265);
         table.getCell(playerFiveName).spaceBottom(25);
         table.getCell(playerFiveName).spaceRight(35);
-        table.add(playerFiveCharacter);
-        table.getCell(playerFiveCharacter).spaceBottom(25);
-        table.getCell(playerFiveCharacter).spaceRight(35);
+        table.add(playerCharacters[4]);
+        table.getCell(playerCharacters[4]).spaceBottom(25);
+        table.getCell(playerCharacters[4]).spaceRight(35);
         table.add(computerPlayerBoxes[4]);
         table.getCell(computerPlayerBoxes[4]).spaceBottom(25);
+        table.getCell(computerPlayerBoxes[4]).spaceRight(35);
+        table.add(charImages[4]);
 
         table.row();
 
         table.add(playerSixName);
         table.getCell(playerSixName).width(265);
         table.getCell(playerSixName).spaceRight(35);
-        table.add(playerSixCharacter);
-        table.getCell(playerSixCharacter).spaceRight(35);
+        table.add(playerCharacters[5]);
+        table.getCell(playerCharacters[5]).spaceRight(35);
         table.add(computerPlayerBoxes[5]);
         table.getCell(computerPlayerBoxes[5]).spaceBottom(25);
+        table.getCell(computerPlayerBoxes[5]).spaceRight(35);
+        table.add(charImages[5]);
 
         stage.addActor(table);
 
@@ -391,6 +434,13 @@ public class PreGameScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        stage.dispose();
+        for (int i = 0; i < 6; i++) {
+            charTextures[i].dispose();
+        }
+        map.dispose();
+        renderer.dispose();
+        skin.dispose();
+        System.out.println("Doing Stuff");
     }
 }

@@ -97,6 +97,7 @@ public class MenuScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 //game.setScreen(new GameScreen(game));
                 game.setScreen(new PreGameScreen(game));
+                dispose();
             }
         });
         buttonPlay.pad(5);
@@ -106,6 +107,7 @@ public class MenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new SettingsScreen(game));
+                dispose();
             }
         });
         buttonSettings.pad(5);
@@ -160,5 +162,6 @@ public class MenuScreen implements Screen {
         skin.dispose();
         map.dispose();
         renderer.dispose();
+        System.out.println("Doing Stuff");
     }
 }
