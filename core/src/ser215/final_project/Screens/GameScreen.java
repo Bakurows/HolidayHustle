@@ -1,6 +1,8 @@
 package ser215.final_project.Screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -22,7 +24,7 @@ import java.time.Year;
 /**
  * Created by Brian on 11/17/2015.
  */
-public class GameScreen implements Screen {
+public class GameScreen implements Screen, InputProcessor {
     private HolidayHustle game;
     private GameKeeper gameKeeper;
     private SpriteBatch sb;
@@ -80,7 +82,8 @@ public class GameScreen implements Screen {
         sb.end();
 
         //Displays the current players turn
-        currentPlayerTurn.setText(gameKeeper.getPlayersList()[gameKeeper.getCurrentPlayerTurn()].getName() + "'s Turn!" + gameKeeper.getCurrentPlayerTurn());
+        currentPlayerTurn.setText(gameKeeper.getPlayersList()[gameKeeper.getCurrentPlayerTurn()].getName() + "'s Turn! " + gameKeeper.getPlayersList()[gameKeeper.getCurrentPlayerTurn()].getStrengthGain()
+         + gameKeeper.getPlayersList()[gameKeeper.getCurrentPlayerTurn()].isInstantWin());
 
         //Automatic Turn for computer Players
         if (gameKeeper.getPlayersList()[gameKeeper.getCurrentPlayerTurn()].isComputerPlayer()) {
@@ -109,24 +112,26 @@ public class GameScreen implements Screen {
         if (LocalDate.now().isAfter(tempDate.of(Year.now().getValue(), 9, 22)) && LocalDate.now().isBefore(tempDate.of(Year.now().getValue(), 12, 21))) {
             map = new TmxMapLoader().load("map_fall.tmx");
             activeMap = "Fall";
-            gameKeeper.setLastBoardLocation(117);
+            gameKeeper.setLastBoardLocation(115);
         } else if (LocalDate.now().isAfter(tempDate.of(Year.now().getValue(), 12, 20)) && LocalDate.now().isBefore(tempDate.of(Year.now().getValue() + 1, 1, 1))) {
             map = new TmxMapLoader().load("map_winter.tmx");
             activeMap = "Winter";
-            gameKeeper.setLastBoardLocation(105);
+            gameKeeper.setLastBoardLocation(104);
         } else if (LocalDate.now().isAfter(tempDate.of(Year.now().getValue() - 1, 12, 31)) && LocalDate.now().isBefore(tempDate.of(Year.now().getValue(), 3, 20))) {
             map = new TmxMapLoader().load("map_winter.tmx");
             activeMap = "Winter";
-            gameKeeper.setLastBoardLocation(105);
+            gameKeeper.setLastBoardLocation(104);
         } else if (LocalDate.now().isAfter(tempDate.of(Year.now().getValue(), 3, 19)) && LocalDate.now().isBefore(tempDate.of(Year.now().getValue(), 6, 21))) {
             map = new TmxMapLoader().load("map_spring.tmx");
             activeMap = "Spring";
-            gameKeeper.setLastBoardLocation(117);
+            gameKeeper.setLastBoardLocation(115);
         } else if (LocalDate.now().isAfter(tempDate.of(Year.now().getValue(), 6, 20)) && LocalDate.now().isBefore(tempDate.of(Year.now().getValue(), 9, 23))) {
             map = new TmxMapLoader().load("map_summer.tmx");
             activeMap = "Summer";
-            gameKeeper.setLastBoardLocation(117);
+            gameKeeper.setLastBoardLocation(115);
         }
+
+        gameKeeper.setActiveMap(activeMap);
 
         //Renders the map
         renderer = new OrthogonalTiledMapRenderer(map);
@@ -139,6 +144,7 @@ public class GameScreen implements Screen {
         //Creates stage - allows things (buttons, SelectBoxes, TextFields, etc.) to be drawn on screen
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
+        //Gdx.input.setInputProcessor(this);
 
         skin = new Skin(Gdx.files.internal("uiskin.json"));
 
@@ -218,5 +224,56 @@ public class GameScreen implements Screen {
         map.dispose();
         renderer.dispose();
         System.out.println("Doing Stuff");
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+
+        if(keycode == Input.Keys.ENTER)
+            gameKeeper.nextTurn();
+
+        if(keycode == Input.Keys.NUMPAD_1)
+            gameKeeper.movePlayer(0,1);
+        if(keycode == Input.Keys.NUMPAD_2)
+            gameKeeper.movePlayer(0,2);
+        if(keycode == Input.Keys.NUMPAD_3)
+            gameKeeper.movePlayer(0,4);
+
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
     }
 }

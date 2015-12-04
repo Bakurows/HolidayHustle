@@ -48,8 +48,8 @@ public class PreGameScreen implements Screen {
         this.game = game;
         numPlayers = new String[]{"3", "4", "5", "6"};
         characterChoices = new String[] {"Frosty", "Jack", "Bugs", "Piper"};
-        //computerPlayers = new String [] {"Person", "Computer"};
-        computerPlayers = new String [] {"Computer", "Person"};
+        computerPlayers = new String [] {"Person", "Computer"};
+        //computerPlayers = new String [] {"Computer", "Person"};
         playerCharacters = new SelectBox[6];
         computerPlayerBoxes = new SelectBox[6];
     }
@@ -193,11 +193,14 @@ public class PreGameScreen implements Screen {
         numberOfPlayersText.setPosition(Gdx.graphics.getWidth() / 2 - numberOfPlayersText.getWidth() / 2, 820 + numberOfPlayers.getHeight());
 
         //Player name fields for players to enter their names.
-        playerOneName = new TextField("Player One Name", skin);
+        //playerOneName = new TextField("Player One Name", skin);
+        playerOneName = new TextField("Frosty", skin);
         playerOneName.setMaxLength(16);
-        playerTwoName = new TextField("Player Two Name", skin);
+        //playerTwoName = new TextField("Player Two Name", skin);
+        playerTwoName = new TextField("Jack", skin);
         playerTwoName.setMaxLength(16);
-        playerThreeName = new TextField("Player Three Name", skin);
+        //playerThreeName = new TextField("Player Three Name", skin);
+        playerThreeName = new TextField("Bugs", skin);
         playerThreeName.setMaxLength(16);
         playerFourName = new TextField("Player Four Name", skin);
         playerFourName.setDisabled(true);

@@ -1,9 +1,7 @@
 package ser215.final_project;
 
 import com.badlogic.gdx.math.MathUtils;
-
 import java.util.ArrayList;
-//import java.util.Random;
 
 /**
  * Created by Brian on 11/16/2015.
@@ -17,6 +15,9 @@ public class Player {
     private ArrayList<PlayingCard> hand;
     private int turnSkips;
     private int playerNumber;
+    private boolean instantWin;
+    private int rollBoost;
+    private int strengthGain;
 
     //Default Constructor
     public Player() {
@@ -26,6 +27,8 @@ public class Player {
         this.boardLocation = 0;
         //this.activeCard = null; //Incomplete
         this.turnSkips = 0;
+        this.instantWin = false;
+        this.rollBoost = 0;
     }
 
     //Three parameter constructor
@@ -36,6 +39,8 @@ public class Player {
         this.character = new CharacterType(characterName);
         //this.activeCard = null; //Incomplete
         this.turnSkips = 0;
+        this.instantWin = false;
+        this.rollBoost = 0;
     }
 
 
@@ -72,6 +77,20 @@ public class Player {
         return playerNumber;
     }
 
+    public boolean isInstantWin() {
+        return instantWin;
+    }
+
+    public int getStrengthGain() {
+        return strengthGain;
+    }
+
+    public int getTurnSkips() {
+        return turnSkips;
+    }
+
+
+
     //Mutator Methods
     public void increaseBoardLocation(int diceRoll) {
         this.boardLocation += diceRoll;
@@ -81,7 +100,7 @@ public class Player {
         this.activeCard = activeCard;
     }
 
-    public void incrementLosingTurn(int amountChanged) {
+    public void incrementTurnSkips(int amountChanged) {
         this.turnSkips += amountChanged;
     }
 
@@ -89,14 +108,34 @@ public class Player {
         this.playerNumber = playerNumber;
     }
 
+    public void gainInstantWin() {
+        this.instantWin = true;
+    }
+
+    public void resetRollBoost() {
+        this.rollBoost = 0;
+    }
+
+    public void increaseRollBoost(int incAmount) {
+        this.rollBoost += incAmount;
+    }
+
+    public void increaseStrengthGain(int incAmount) {
+        this.strengthGain += incAmount;
+    }
+
     //Other Methods
     public int rollDie() {
-        /*Random rng = new Random();
-        return (rng.nextInt(6) + 1);*/
         int random = MathUtils.random(5) + 1;
-        //System.out.println(random);
-        //return random;
-        return 1;
+        random += this.rollBoost;
+        resetRollBoost();
+        return random;
+        //return 1;
+    }
+
+    public int rollForBattle() {
+        int random = MathUtils.random(5) + 1;
+        return random;
     }
     
     public void drawCard(Deck deck) {
@@ -104,12 +143,13 @@ public class Player {
     }
 
     public boolean winBattle(Player defender) {
-        int attackerRoll = rollDie();
-        int defenderRoll = rollDie();
+        int attackerRoll = rollForBattle();
+        int defenderRoll = rollForBattle();
+
 
         //INSERT FORMULA FOR DETERMINING WINNER AFTER THIS
-        if ((attackerRoll + this.character.getCharacterPoints() /*+ this.activeCard.getStatBoost()*/) > (defenderRoll + defender.character.getCharacterPoints() /*+ defender.activeCard.getStatBoost()*/) /*||
-                this.activeCard.winAttackBattle()*/) {
+        if ((attackerRoll + this.character.getCharacterPoints() + this.strengthGain /*+ this.activeCard.getStatBoost()*/) > (defenderRoll + defender.character.getCharacterPoints() + defender.getStrengthGain() /*+ defender.activeCard.getStatBoost()*/) ||
+                this.instantWin) {
             return true;
         }else {
             return false;
