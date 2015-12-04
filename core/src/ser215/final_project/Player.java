@@ -140,7 +140,11 @@ public class Player {
     
     public void drawCards(Deck deck, int num) {
     	for (int i = 0; i < num; i++) {
+    		System.out.println("Card about to be added to hand");
     		this.hand.add(deck.drawCard());
+    		
+    		//FOR DEBUGGING
+    		System.out.println("Card added to hand");
     	}
     }
     

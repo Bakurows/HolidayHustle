@@ -16,9 +16,12 @@ public class Deck {
 	private ArrayList<PlayingCard> deckArray;
 	
 	public Deck() {
+		this.deckArray = new ArrayList<PlayingCard>();
+		
 		Random rng = new Random();
 		for (int i = 0; i < maxSize; i++) {
-			int card = rng.nextInt(10) + 1;
+			int card = rng.nextInt(16) + 1;
+			System.out.println("Adding card " + card + " to deck");
 			switch(card) {
 				case 1:	deckArray.add(new PlayingCardMoveSpaces(1, new Texture(Gdx.files.internal("cards/move_up_1.png"))));
 						break;
@@ -69,6 +72,9 @@ public class Deck {
 	public PlayingCard drawCard() {
 		Random rng = new Random();
 		int card = rng.nextInt(deckArray.size());
+		// FOR DEBUGGING
+		System.out.println("Card removed from deck");
+		
 		return deckArray.remove(card);
 	}
 }

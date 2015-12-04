@@ -32,6 +32,7 @@ public class GameKeeper {
         this.playersList[2] = new Player();
         this.currentPlayerTurn = 0;
         this.activeMap = "Fall";
+        this.deck = new Deck();
     }
 
     //X parameter constructor
@@ -39,11 +40,15 @@ public class GameKeeper {
         this.numberPlayers = numberPlayers;
         this.currentDate = this.currentDate.now();
         this.playersList = new Player[numberPlayers];
+        this.deck = new Deck();
         for (int i = 0; i < numberPlayers; i++) {
             this.playersList[i] = new Player(playerNames[i], computerPlayer[i] , playerCharacters[i]);
             
             // Each player starts with 3 cards from the deck
-            //this.playersList[i].drawCards(deck, 3);
+            this.playersList[i].drawCards(deck, 3);
+            
+            // FOR DEBUGGING
+            System.out.println("Player drew initial 3 cards");
         }
         /*for (int i = 0; i < numberPlayers; i++) {
             //playerLocations[i] = 0;

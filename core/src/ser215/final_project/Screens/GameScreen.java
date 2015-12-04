@@ -181,11 +181,20 @@ public class GameScreen implements Screen, InputProcessor {
         			ArrayList<PlayingCard> hand = gameKeeper.getPlayerHand();
         			ImageButton[] cardButtons = new ImageButton[hand.size()];
         			for (int i = 0; i < hand.size(); i++) {
-        				//cardButtons[i] = new ImageButton
+        				PlayingCard card = hand.get(i); // Get card from hand
+        				cardButtons[i] = new ImageButton(card.getImage().getDrawable()); // Make button for card
+        				cardButtons[i].addListener(new ClickListener() {
+        					@Override
+        					public void clicked(InputEvent event, float x, float y) {
+        						// Play Card
+        					}
+        				});
+        				cardButtons[i].pad(1);
+        				table.add(cardButtons[i]); // Basic implementation, change later
         			}
         		}
         		else {
-        			
+        			// Remove cards display
         		}
         	}
         });
@@ -206,8 +215,8 @@ public class GameScreen implements Screen, InputProcessor {
         table.add(buttonRoll);
         table.getCell(buttonRoll).spaceBottom(5);
         table.row();
-        /*table.add(buttonShowCards);
-        table.row();*/
+        table.add(buttonShowCards);
+        table.row();
         table.add(buttonMenu);
         table.getCell(buttonMenu).spaceTop(846);
         table.getCell(buttonMenu).right();

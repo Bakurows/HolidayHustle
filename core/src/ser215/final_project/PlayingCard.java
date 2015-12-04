@@ -33,6 +33,10 @@ public abstract class PlayingCard {
     public int getTier() {
     	return tier;
     }
+    
+    public Image getImage() {
+    	return cardImage;
+    }
 
 
 
