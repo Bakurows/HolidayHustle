@@ -16,10 +16,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import ser215.final_project.GameKeeper;
 import ser215.final_project.HolidayHustle;
+import ser215.final_project.PlayingCard;
 
 import javax.xml.soap.Text;
 import java.time.LocalDate;
 import java.time.Year;
+import java.util.ArrayList;
 
 /**
  * Created by Brian on 11/17/2015.
@@ -171,9 +173,20 @@ public class GameScreen implements Screen, InputProcessor {
         
         buttonShowCards = new TextButton("SHOW CARDS", skin);
         buttonShowCards.addListener(new ClickListener() {
+        	boolean toggle = false; //Changes state when clicked
         	@Override
         	public void clicked(InputEvent event, float x, float y) {
-        		//Show cards in current players hand
+        		toggle = !toggle;
+        		if (toggle) {
+        			ArrayList<PlayingCard> hand = gameKeeper.getPlayerHand();
+        			ImageButton[] cardButtons = new ImageButton[hand.size()];
+        			for (int i = 0; i < hand.size(); i++) {
+        				cardButtons[i] = new ImageButton
+        			}
+        		}
+        		else {
+        			
+        		}
         	}
         });
         buttonShowCards.pad(1);

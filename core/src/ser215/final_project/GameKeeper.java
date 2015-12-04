@@ -4,6 +4,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.MathUtils;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 /**
  * Created by Brian on 11/16/2015.
@@ -14,7 +15,8 @@ public class GameKeeper {
     private LocalDate currentDate;
     private Player[] playersList;
     private int currentPlayerTurn;
-    private PlayingCard[] playingCards;
+    //private PlayingCard[] playingCards;
+    private Deck deck;
     private int lastBoardLocation;//Need to change for correct value
     private String activeMap;
 
@@ -39,6 +41,9 @@ public class GameKeeper {
         this.playersList = new Player[numberPlayers];
         for (int i = 0; i < numberPlayers; i++) {
             this.playersList[i] = new Player(playerNames[i], computerPlayer[i] , playerCharacters[i]);
+            
+            // Each player starts with 3 cards from the deck
+            this.playersList[i].drawCards(deck, 3);
         }
         /*for (int i = 0; i < numberPlayers; i++) {
             //playerLocations[i] = 0;
@@ -107,7 +112,15 @@ public class GameKeeper {
             System.out.println(this.playersList[this.currentPlayerTurn].getName() + " " + this.playersList[this.currentPlayerTurn].getBoardLocation() + ": " + dieRoll);
         }
 
-        incrementPlayerTurn();
+        incrementPlayerTurn(); // Does not advance turn until roll event happens
+    }
+    
+    public ArrayList<PlayingCard> getPlayerHand() {
+    	return this.playersList[this.currentPlayerTurn].getHand();
+    }
+    
+    public void playCard(PlayingCard card) {
+    	//todo Action based on card!
     }
 
     //Moves a player

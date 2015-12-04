@@ -138,9 +138,17 @@ public class Player {
         return random;
     }
     
-    public void drawCard(Deck deck) {
-    	hand.add(deck.drawCard());
+    public void drawCards(Deck deck, int num) {
+    	for (int i = 0; i < num; i++) {
+    		hand.add(deck.drawCard());
+    	}
     }
+    
+    public int handSize() {
+    	return hand.size();
+    }
+    
+    
 
     public boolean winBattle(Player defender) {
         int attackerRoll = rollForBattle();
