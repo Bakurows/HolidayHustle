@@ -140,7 +140,7 @@ public class Player {
     
     public void drawCards(Deck deck, int num) {
     	for (int i = 0; i < num; i++) {
-    		hand.add(deck.drawCard());
+    		this.hand.add(deck.drawCard());
     	}
     }
     
@@ -156,7 +156,7 @@ public class Player {
 
 
         //INSERT FORMULA FOR DETERMINING WINNER AFTER THIS
-        if ((attackerRoll + this.character.getCharacterPoints() + this.strengthGain /*+ this.activeCard.getStatBoost()*/) > (defenderRoll + defender.character.getCharacterPoints() + defender.getStrengthGain() /*+ defender.activeCard.getStatBoost()*/) ||
+        if ((attackerRoll + this.character.getCharacterPoints() + this.strengthGain /*+ this.activeCard.getStrengthBoost()*/) > (defenderRoll + defender.character.getCharacterPoints() + defender.getStrengthGain() /*+ defender.activeCard.getStrengthBoost()*/) ||
                 this.instantWin) {
             return true;
         }else {

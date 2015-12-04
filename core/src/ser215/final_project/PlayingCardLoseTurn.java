@@ -1,5 +1,7 @@
 package ser215.final_project;
 
+import com.badlogic.gdx.graphics.Texture;
+
 /**
  * Created by Brian on 11/18/2015.
  */
@@ -13,14 +15,15 @@ public class PlayingCardLoseTurn extends PlayingCard {
     }
 
     //Name parameter constructor
-    public PlayingCardLoseTurn(String name, int turnsLost) {
-        super(name, turnsLost);
+    public PlayingCardLoseTurn(int turnsLost, Texture cardTexture) {
+        super(turnsLost, cardTexture);
         this.turnsLost = turnsLost;
     }
 
 
     @Override
-    public void performAction() {
-
+    public void performAction(Player playerActingOn) {
+        //Does this card have multiple tiers?
+        playerActingOn.incrementTurnSkips(super.getTier());
     }
 }

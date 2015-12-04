@@ -181,7 +181,7 @@ public class GameScreen implements Screen, InputProcessor {
         			ArrayList<PlayingCard> hand = gameKeeper.getPlayerHand();
         			ImageButton[] cardButtons = new ImageButton[hand.size()];
         			for (int i = 0; i < hand.size(); i++) {
-        				cardButtons[i] = new ImageButton
+        				//cardButtons[i] = new ImageButton
         			}
         		}
         		else {

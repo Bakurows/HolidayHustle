@@ -43,7 +43,7 @@ public class GameKeeper {
             this.playersList[i] = new Player(playerNames[i], computerPlayer[i] , playerCharacters[i]);
             
             // Each player starts with 3 cards from the deck
-            this.playersList[i].drawCards(deck, 3);
+            //this.playersList[i].drawCards(deck, 3);
         }
         /*for (int i = 0; i < numberPlayers; i++) {
             //playerLocations[i] = 0;
