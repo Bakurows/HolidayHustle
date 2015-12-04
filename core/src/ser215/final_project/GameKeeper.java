@@ -124,8 +124,31 @@ public class GameKeeper {
     	return this.playersList[this.currentPlayerTurn].getHand();
     }
     
+    //Plays card
     public void playCard(PlayingCard card) {
-    	//todo Action based on card!
+    	String type = card.getType();
+    	int tier = card.getTier();
+    	
+    	switch (type) {
+    	case "add_strength":
+    		//stuff
+    		break;
+    	case "lose_strength":
+    		//stuff
+    		break;
+    	case "move_up":
+    		//stuff
+    		break;
+    	case "move_down":
+    		//stuff
+    		break;
+    	case "lose_turn":
+    		//stuff
+    		break;
+    	case "battle_win":
+    		//stuff
+    		break;
+    	}
     }
 
     //Moves a player

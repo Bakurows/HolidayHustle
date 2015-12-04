@@ -186,7 +186,7 @@ public class GameScreen implements Screen, InputProcessor {
         				cardButtons[i].addListener(new ClickListener() {
         					@Override
         					public void clicked(InputEvent event, float x, float y) {
-        						// Play Card
+        						gameKeeper.playCard(card);
         					}
         				});
         				cardButtons[i].pad(1);

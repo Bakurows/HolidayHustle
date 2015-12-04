@@ -18,8 +18,8 @@ public class PlayerPlayingCard extends PlayingCard {
     }
 
     //2 parameter constructor
-    public PlayerPlayingCard(boolean winAttackBattle, int strengthBoost, Texture cardTexture) {
-        super(strengthBoost, cardTexture);
+    public PlayerPlayingCard(String type, boolean winAttackBattle, int strengthBoost, Texture cardTexture) {
+        super(type, strengthBoost, cardTexture);
         this.winAttackBattle = winAttackBattle;
         this.strengthBoost = strengthBoost;
     }
