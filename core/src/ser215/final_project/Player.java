@@ -29,6 +29,7 @@ public class Player {
         this.turnSkips = 0;
         this.instantWin = false;
         this.rollBoost = 0;
+        this.hand = new ArrayList<PlayingCard>();
     }
 
     //Three parameter constructor
@@ -41,6 +42,7 @@ public class Player {
         this.turnSkips = 0;
         this.instantWin = false;
         this.rollBoost = 0;
+        this.hand = new ArrayList<PlayingCard>();
     }
 
 
