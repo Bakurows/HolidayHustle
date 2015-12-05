@@ -251,6 +251,7 @@ public class GameKeeper {
                 this.playersList[this.currentPlayerTurn].increaseStrengthGain(1);
             }else if (boardLocation == 6 || boardLocation == 44 || boardLocation == 60 || boardLocation == 92) {
                 //TODO Gain random card
+                this.playersList[this.currentPlayerTurn].drawCards(this.deck, 1);
                 //move forward 1 space
                 movePlayerAlternate(this.currentPlayerTurn, 1);
             }else if (boardLocation == 9 || boardLocation == 50 || boardLocation == 75 || boardLocation == 86 || boardLocation == 99) {

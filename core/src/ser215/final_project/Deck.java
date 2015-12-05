@@ -74,7 +74,7 @@ public class Deck {
 		int card = rng.nextInt(deckArray.size());
 		// FOR DEBUGGING
 		System.out.println("Card removed from deck");
-		
+
 		return deckArray.remove(card);
 	}
 }

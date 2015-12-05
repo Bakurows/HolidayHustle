@@ -39,7 +39,7 @@ public class GameScreen implements Screen, InputProcessor {
     //For buttons
     private Stage stage;
     private Skin skin;
-    private Table table;
+    private Table table, tableTwo;
     private TextButton buttonRoll, buttonMenu, buttonShowCards;
     private TextField currentPlayerTurn;
 
@@ -154,18 +154,23 @@ public class GameScreen implements Screen, InputProcessor {
         table = new Table(skin);
         table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
+        tableTwo = new Table(skin);
+        tableTwo.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
 
         //Textfield displaying current players turn
         currentPlayerTurn = new TextField("", skin);
         currentPlayerTurn.setDisabled(true);
         currentPlayerTurn.setWidth(360);
-        currentPlayerTurn.setPosition(Gdx.graphics.getWidth() / 2 - currentPlayerTurn.getWidth() / 2, Gdx.graphics.getHeight() - currentPlayerTurn.getHeight());
+        currentPlayerTurn.setPosition(Gdx.graphics.getWidth() / 2 - currentPlayerTurn.getWidth() / 2 + 155, Gdx.graphics.getHeight() - currentPlayerTurn.getHeight());
         
         //Creating Buttons
         buttonRoll = new TextButton("ROLL", skin);
         buttonRoll.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                tableTwo.reset();
+                //TODO need to find a way to reverse variable toggle below
                 gameKeeper.nextTurn();
             }
         });
@@ -179,7 +184,7 @@ public class GameScreen implements Screen, InputProcessor {
         		toggle = !toggle;
         		if (toggle) {
         			ArrayList<PlayingCard> hand = gameKeeper.getPlayerHand();
-        			ImageButton[] cardButtons = new ImageButton[hand.size()];
+        			final ImageButton[] cardButtons = new ImageButton[hand.size()];
         			for (int i = 0; i < hand.size(); i++) {
         				PlayingCard card = hand.get(i); // Get card from hand
         				cardButtons[i] = new ImageButton(card.getImage().getDrawable()); // Make button for card
@@ -190,11 +195,16 @@ public class GameScreen implements Screen, InputProcessor {
         					}
         				});
         				cardButtons[i].pad(1);
-        				table.add(cardButtons[i]); // Basic implementation, change later
+        				//tableTwo.add(cardButtons[i]).size(cardButtons[i].getImage().getImageWidth() / 2, cardButtons[i].getImage().getImageHeight() / 2); // Basic implementation, change later
+                        tableTwo.add(cardButtons[i]).size(520 / 2, 600 / 2);
+                        //tableTwo.add(cardButtons[i]);
+                        if ((i + 1) % 3 == 0)
+                            tableTwo.row();
         			}
         		}
         		else {
         			// Remove cards display
+                    tableTwo.reset();
         		}
         	}
         });
@@ -212,16 +222,18 @@ public class GameScreen implements Screen, InputProcessor {
         buttonMenu.getLabel().setFontScale(0.40f, 0.40f);
 
         //Adding elements to the table, and the table to the stage
-        table.add(buttonRoll);
-        table.getCell(buttonRoll).spaceBottom(5);
-        table.row();
         table.add(buttonShowCards);
+        table.getCell(buttonShowCards).spaceRight(410);
+        table.add(buttonRoll);
+        //table.getCell(buttonRoll).spaceBottom(5);
         table.row();
+        table.add();
         table.add(buttonMenu);
         table.getCell(buttonMenu).spaceTop(846);
         table.getCell(buttonMenu).right();
         table.top();
         table.right();
+        stage.addActor(tableTwo);
         stage.addActor(table);
         stage.addActor(currentPlayerTurn);
     }

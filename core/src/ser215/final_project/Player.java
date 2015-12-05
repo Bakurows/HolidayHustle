@@ -29,6 +29,7 @@ public class Player {
         this.turnSkips = 0;
         this.instantWin = false;
         this.rollBoost = 0;
+        this.hand = new ArrayList<PlayingCard>();
     }
 
     //Three parameter constructor
@@ -41,6 +42,7 @@ public class Player {
         this.turnSkips = 0;
         this.instantWin = false;
         this.rollBoost = 0;
+        this.hand = new ArrayList<PlayingCard>();
     }
 
 
@@ -129,8 +131,8 @@ public class Player {
         int random = MathUtils.random(5) + 1;
         random += this.rollBoost;
         resetRollBoost();
-        return random;
-        //return 1;
+        //return random;
+        return 1;
     }
 
     public int rollForBattle() {
