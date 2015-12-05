@@ -15,8 +15,8 @@ public class PlayingCardMoveSpaces extends PlayingCard {
     }
 
     //2 parameter constructor
-    public PlayingCardMoveSpaces(int spaceMove, Texture cardTexture) {
-        super(spaceMove, cardTexture);
+    public PlayingCardMoveSpaces(String type, int spaceMove, Texture cardTexture) {
+        super(type, spaceMove, cardTexture);
         this.spaceMove = spaceMove;
     }
 
