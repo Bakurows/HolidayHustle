@@ -22,6 +22,7 @@ public class PlayingCardMoveSpaces extends PlayingCard {
 
     @Override
     public void performAction(Player playerActingOn) {
-
+        System.out.println("Perform action PlayingCardMoveSpaces");
+        playerActingOn.increaseBoardLocation(this.spaceMove);
     }
 }

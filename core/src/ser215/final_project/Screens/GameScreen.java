@@ -12,10 +12,12 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import ser215.final_project.GameKeeper;
 import ser215.final_project.HolidayHustle;
+import ser215.final_project.Player;
 import ser215.final_project.PlayingCard;
 
 import javax.xml.soap.Text;
@@ -39,9 +41,13 @@ public class GameScreen implements Screen, InputProcessor {
     //For buttons
     private Stage stage;
     private Skin skin;
-    private Table table, tableTwo;
+    private Table table, tableTwo, tableThree;
     private TextButton buttonRoll, buttonMenu, buttonShowCards;
     private TextField currentPlayerTurn;
+    private TextField whichPlayerPrompt;
+    private SelectBox<String> playerNames;
+    private TextButton confirmTarget;
+    private boolean targetConfirmed;
 
 
     public GameScreen(HolidayHustle game) {
@@ -157,6 +163,9 @@ public class GameScreen implements Screen, InputProcessor {
         tableTwo = new Table(skin);
         tableTwo.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
+        tableThree = new Table(skin);
+        tableThree.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
 
         //Textfield displaying current players turn
         currentPlayerTurn = new TextField("", skin);
@@ -170,6 +179,7 @@ public class GameScreen implements Screen, InputProcessor {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 tableTwo.reset();
+                tableThree.reset();
                 //TODO need to find a way to reverse variable toggle below
                 gameKeeper.nextTurn();
             }
@@ -184,14 +194,45 @@ public class GameScreen implements Screen, InputProcessor {
         		toggle = !toggle;
         		if (toggle) {
         			ArrayList<PlayingCard> hand = gameKeeper.getPlayerHand();
+                    final int handSize = hand.size();
         			final ImageButton[] cardButtons = new ImageButton[hand.size()];
         			for (int i = 0; i < hand.size(); i++) {
-        				PlayingCard card = hand.get(i); // Get card from hand
+        				final PlayingCard card = hand.get(i); // Get card from hand
         				cardButtons[i] = new ImageButton(card.getImage().getDrawable()); // Make button for card
         				cardButtons[i].addListener(new ClickListener() {
         					@Override
         					public void clicked(InputEvent event, float x, float y) {
-        						//gameKeeper.playCard(card);
+                                //Need to disable the card button when clicked
+                                for (int i = 0; i < handSize; i++) {
+                                    cardButtons[i].setTouchable(Touchable.disabled);
+                                }
+                                if (card.getType().equals("battle_win") || card.getType().equals("add_strength")) {
+                                    gameKeeper.playCard(card,gameKeeper.getPlayersList()[gameKeeper.getCurrentPlayerTurn()]);
+                                }else {
+                                    //TODO code for selecting player to act on
+                                    whichPlayerPrompt = new TextField("Which player do you want to use this card on?", skin);
+                                    whichPlayerPrompt.setDisabled(true);
+                                    whichPlayerPrompt.setWidth(500);
+
+                                    playerNames = new SelectBox<>(skin);
+                                    playerNames.setItems(gameKeeper.getPlayerNames());
+                                    playerNames.setWidth(265);
+
+                                    confirmTarget = new TextButton("Play card on target!", skin);
+                                    confirmTarget.setWidth(360);
+                                    confirmTarget.addListener(new ClickListener() {
+                                        @Override
+                                        public void clicked(InputEvent event, float x, float y) {
+                                            gameKeeper.playCard(card, gameKeeper.getPlayerWithName(playerNames.getSelected()));
+                                            tableThree.reset();
+                                        }
+                                    });
+                                    tableThree.add(whichPlayerPrompt);
+                                    tableThree.row();
+                                    tableThree.add(playerNames);
+                                    tableThree.row();
+                                    tableThree.add(confirmTarget);
+                                }
         					}
         				});
         				cardButtons[i].pad(1);
@@ -242,6 +283,7 @@ public class GameScreen implements Screen, InputProcessor {
         table.top();
         table.right();
         stage.addActor(tableTwo);
+        stage.addActor(tableThree);
         stage.addActor(table);
         stage.addActor(currentPlayerTurn);
     }

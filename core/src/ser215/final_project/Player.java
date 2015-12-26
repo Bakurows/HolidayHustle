@@ -149,6 +149,10 @@ public class Player {
     		System.out.println("Card added to hand");
     	}
     }
+
+    public void removeCard(PlayingCard card) {
+        this.hand.remove(card);
+    }
     
     public int handSize() {
     	return hand.size();

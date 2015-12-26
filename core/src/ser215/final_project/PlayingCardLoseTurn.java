@@ -23,7 +23,7 @@ public class PlayingCardLoseTurn extends PlayingCard {
 
     @Override
     public void performAction(Player playerActingOn) {
-        //Does this card have multiple tiers?
-        playerActingOn.incrementTurnSkips(super.getTier());
+        System.out.println("Perform action PlayingCardLoseTurn");
+        playerActingOn.incrementTurnSkips(this.turnsLost);
     }
 }

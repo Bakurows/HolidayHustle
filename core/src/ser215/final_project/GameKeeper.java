@@ -83,6 +83,21 @@ public class GameKeeper {
         return currentPlayerTurn;
     }
 
+    public String[] getPlayerNames() {
+        String [] temp = new String[this.numberPlayers];
+        for (int i = 0; i < this.numberPlayers; i++) {
+            temp[i] = this.playersList[i].getName();
+        }
+        return temp;
+    }
+
+    public Player getPlayerWithName(String name) {
+        for (int i = 0; i < this.numberPlayers; i++ ) {
+            if (this.playersList[i].getName().equals(name))
+                return this.playersList[i];
+        }
+        return null;
+    }
 
     //Mutator Methods
     public void changePlayerLocation(int currentPlayer, int spaceMoved) {
@@ -125,53 +140,14 @@ public class GameKeeper {
     }
     
     //Plays card
-    public void playCard(PlayingCard card) {
-    	String type = card.getType();
-    	int tier = card.getTier();
-    	
-    	switch (type) {
-    	case "add_strength":
-    		//stuff
-    		break;
-    	case "lose_strength":
-    		//stuff
-    		break;
-    	case "move_up":
-    		//stuff
-    		break;
-    	case "move_down":
-    		//stuff
-    		break;
-    	case "lose_turn":
-    		//stuff
-    		break;
-    	case "battle_win":
-    		//stuff
-    		break;
-    	}
+    public void playCard(PlayingCard card, Player playerActingOn) {
+        card.performAction(playerActingOn);
+        this.playersList[this.currentPlayerTurn].removeCard(card);
     }
 
     //Moves a player
     public void movePlayer(int playerToMove, int dieRoll) {
         if (!(this.playersList[playerToMove].getBoardLocation() + dieRoll > lastBoardLocation) && (this.playersList[playerToMove].getBoardLocation() + dieRoll < (lastBoardLocation) ||
-                this.playersList[playerToMove].getBoardLocation() + dieRoll == lastBoardLocation)){
-            if (otherPlayerPresent(this.playersList[playerToMove].getBoardLocation() + dieRoll)) {
-                if (this.playersList[this.currentPlayerTurn].winBattle(this.playersList[getPlayerNumberAtLocation(this.playersList[playerToMove].getBoardLocation() + dieRoll)])) {
-                    moveLosingDefender(getPlayerNumberAtLocation(this.playersList[playerToMove].getBoardLocation() + dieRoll));
-                    changePlayerLocation(playerToMove, dieRoll);
-                }else {
-                    movePlayer(playerToMove, dieRoll - 1);
-                }
-            }else {
-                changePlayerLocation(playerToMove, dieRoll);
-            }
-        }
-        performBoardEvent(this.playersList[this.currentPlayerTurn].getBoardLocation());
-        //TODO insert game board event method call
-    }
-
-    public void movePlayerAlternate(int playerToMove, int dieRoll) {
-        if (!(this.playersList[playerToMove].getBoardLocation() + dieRoll > lastBoardLocation) && (this.playersList[playerToMove].getBoardLocation() + dieRoll < (lastBoardLocation - 1) ||
                 this.playersList[playerToMove].getBoardLocation() + dieRoll == lastBoardLocation)){
             if (otherPlayerPresent(this.playersList[playerToMove].getBoardLocation() + dieRoll)) {
                 if (this.playersList[this.currentPlayerTurn].winBattle(this.playersList[getPlayerNumberAtLocation(this.playersList[playerToMove].getBoardLocation() + dieRoll)])) {
@@ -242,7 +218,7 @@ public class GameKeeper {
             if (boardLocation == 9 || boardLocation == 18 || boardLocation == 24 || boardLocation == 37 || boardLocation == 41 || boardLocation == 45 ||
                     boardLocation == 50 || boardLocation == 55 || boardLocation == 67 || boardLocation == 76) {
                 //Current player goes back 1 space
-                movePlayerAlternate(this.currentPlayerTurn, -1);
+                movePlayer(this.currentPlayerTurn, -1);
                 int temp = MathUtils.random(1);
                 switch (temp) {
                     case 0: //nothing
@@ -254,14 +230,14 @@ public class GameKeeper {
             } else if (boardLocation == 88 || boardLocation == 89 || boardLocation == 94 || boardLocation == 100 || boardLocation == 102 ||
                     boardLocation == 104 || boardLocation == 109 || boardLocation == 111 || boardLocation == 113) {
                 //Player goes back 1 space and loses 1 turn
-                movePlayerAlternate(this.currentPlayerTurn, -1);
+                movePlayer(this.currentPlayerTurn, -1);
                 this.playersList[this.currentPlayerTurn].incrementTurnSkips(1);
             } else if (boardLocation == 33) {
                 //Player moves to board location 52... will make it possible for multiple players on one spot
-                movePlayerAlternate(this.currentPlayerTurn, 19);
+                movePlayer(this.currentPlayerTurn, 19);
             } else if (boardLocation == 13) {
                 //Player goes back 3 spaces
-                movePlayerAlternate(this.currentPlayerTurn, -3);
+                movePlayer(this.currentPlayerTurn, -3);
             } else if (boardLocation == 43 || boardLocation == 57) {
                 //Player loses 3 strength
                 this.playersList[this.currentPlayerTurn].increaseStrengthGain(-3);
@@ -276,18 +252,18 @@ public class GameKeeper {
                 //TODO Gain random card
                 this.playersList[this.currentPlayerTurn].drawCards(this.deck, 1);
                 //move forward 1 space
-                movePlayerAlternate(this.currentPlayerTurn, 1);
+                movePlayer(this.currentPlayerTurn, 1);
             }else if (boardLocation == 9 || boardLocation == 50 || boardLocation == 75 || boardLocation == 86 || boardLocation == 99) {
                 //TODO Lose random card
                 //go back 2 spaces
-                movePlayerAlternate(this.currentPlayerTurn, -2);
+                movePlayer(this.currentPlayerTurn, -2);
             }
         }else if (activeMap.equals("Spring")) {
             if (boardLocation == 4 || boardLocation == 8 || boardLocation == 11 || boardLocation == 21 || boardLocation == 23 || boardLocation == 24 || boardLocation == 30 || boardLocation == 34
                     || boardLocation == 42 || boardLocation == 46 || boardLocation == 58 || boardLocation == 61 || boardLocation == 67 || boardLocation == 75 || boardLocation == 85 || boardLocation == 92
                     || boardLocation == 101 || boardLocation == 106 || boardLocation == 113 || boardLocation == 114) {
                 //move forward 1-3 spaces
-                movePlayerAlternate(this.currentPlayerTurn, MathUtils.random(2) + 1);
+                movePlayer(this.currentPlayerTurn, MathUtils.random(2) + 1);
             }else if (boardLocation == 6 || boardLocation == 7 || boardLocation == 12 || boardLocation == 13 || boardLocation == 15 || boardLocation == 19 || boardLocation == 27 || boardLocation == 37
                     || boardLocation == 50 || boardLocation == 64 || boardLocation == 78 || boardLocation == 82 || boardLocation == 90 || boardLocation == 96 || boardLocation == 99 || boardLocation == 102
                     || boardLocation == 109) {
@@ -297,7 +273,7 @@ public class GameKeeper {
                         this.playersList[this.currentPlayerTurn].incrementTurnSkips(1);
                         break;
                     case 1: //go back 2 spaces
-                        movePlayerAlternate(this.currentPlayerTurn, -2);
+                        movePlayer(this.currentPlayerTurn, -2);
                         break;
                 }
             }else if (boardLocation == 10 || boardLocation == 40 || boardLocation == 72) {
@@ -309,7 +285,7 @@ public class GameKeeper {
             if (boardLocation == 4 || boardLocation == 13 || boardLocation == 19 || boardLocation == 29 || boardLocation == 43 || boardLocation == 50 || boardLocation == 58 || boardLocation == 64
                     || boardLocation == 71 || boardLocation == 79 || boardLocation == 87 || boardLocation == 95 || boardLocation == 104 || boardLocation == 110 || boardLocation == 114) {
                 //go back 2 spaces
-                movePlayerAlternate(this.currentPlayerTurn, -2);
+                movePlayer(this.currentPlayerTurn, -2);
                 //lose 1 strength
                 this.playersList[this.currentPlayerTurn].increaseStrengthGain(-1);
             }else if (boardLocation == 6 || boardLocation == 16 || boardLocation == 22 || boardLocation == 23 || boardLocation == 24 || boardLocation == 38 || boardLocation == 39 || boardLocation == 56

@@ -29,11 +29,11 @@ public class Deck {
 						break;
 				case 3:	deckArray.add(new PlayingCardMoveSpaces("move_up", 3, new Texture(Gdx.files.internal("cards/move_up_3.png"))));
 						break;
-                case 4:	deckArray.add(new PlayingCardMoveSpaces("move_down", 1, new Texture(Gdx.files.internal("cards/move_down_1.png"))));
+                case 4:	deckArray.add(new PlayingCardMoveSpaces("move_down", -1, new Texture(Gdx.files.internal("cards/move_down_1.png"))));
                     break;
-                case 5:	deckArray.add(new PlayingCardMoveSpaces("move_down", 2, new Texture(Gdx.files.internal("cards/move_down_2.png"))));
+                case 5:	deckArray.add(new PlayingCardMoveSpaces("move_down", -2, new Texture(Gdx.files.internal("cards/move_down_2.png"))));
                     break;
-                case 6:	deckArray.add(new PlayingCardMoveSpaces("move_down", 3, new Texture(Gdx.files.internal("cards/move_down_3.png"))));
+                case 6:	deckArray.add(new PlayingCardMoveSpaces("move_down", -3, new Texture(Gdx.files.internal("cards/move_down_3.png"))));
                     break;
 				case 7:	deckArray.add(new PlayingCardLoseTurn("lose_turn", 1, new Texture(Gdx.files.internal("cards/lose_turn_1.png"))));
 						break;
@@ -51,12 +51,12 @@ public class Deck {
 				case 12:	deckArray.add(new PlayerPlayingCard("add_strength", false, 3, new Texture(Gdx.files.internal("cards/add_strength_3.png"))));
                     //Replace this with add strength 3
 						break;
-                case 13:	deckArray.add(new PlayerPlayingCard("lose_strength", false, 1, new Texture(Gdx.files.internal("cards/lose_strength_1.png"))));
+                case 13:	deckArray.add(new PlayerPlayingCard("lose_strength", false, -1, new Texture(Gdx.files.internal("cards/lose_strength_1.png"))));
                     break;
-                case 14:	deckArray.add(new PlayerPlayingCard("lose_strength", false, 2, new Texture(Gdx.files.internal("cards/lose_strength_2.png"))));
+                case 14:	deckArray.add(new PlayerPlayingCard("lose_strength", false, -2, new Texture(Gdx.files.internal("cards/lose_strength_2.png"))));
                     //Replace this with lose strength 2
                     break;
-                case 15:	deckArray.add(new PlayerPlayingCard("lose_strength", false, 3, new Texture(Gdx.files.internal("cards/lose_strength_3.png"))));
+                case 15:	deckArray.add(new PlayerPlayingCard("lose_strength", false, -3, new Texture(Gdx.files.internal("cards/lose_strength_3.png"))));
                     //Replace this with lose strength 3
                     break;
 				case 16:deckArray.add(new PlayerPlayingCard("battle_win", true, 0, new Texture(Gdx.files.internal("cards/battle_win.png"))));

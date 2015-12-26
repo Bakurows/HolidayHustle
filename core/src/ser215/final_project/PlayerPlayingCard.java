@@ -34,6 +34,9 @@ public class PlayerPlayingCard extends PlayingCard {
 
     @Override
     public void performAction(Player playerActingOn) {
-
+        System.out.println("Perform action PlayerPlayingCard");
+        if (this.strengthBoost == 0)
+            playerActingOn.gainInstantWin();
+        playerActingOn.increaseStrengthGain(this.strengthBoost);
     }
 }
