@@ -191,15 +191,23 @@ public class GameScreen implements Screen, InputProcessor {
         				cardButtons[i].addListener(new ClickListener() {
         					@Override
         					public void clicked(InputEvent event, float x, float y) {
-        						gameKeeper.playCard(card);
+        						//gameKeeper.playCard(card);
         					}
         				});
         				cardButtons[i].pad(1);
-        				//tableTwo.add(cardButtons[i]).size(cardButtons[i].getImage().getImageWidth() / 2, cardButtons[i].getImage().getImageHeight() / 2); // Basic implementation, change later
-                        tableTwo.add(cardButtons[i]).size(520 / 2, 600 / 2);
-                        //tableTwo.add(cardButtons[i]);
-                        if ((i + 1) % 3 == 0)
-                            tableTwo.row();
+                        if (hand.size() <= 6) {
+                            tableTwo.add(cardButtons[i]).size(card.getCardTexture().getWidth() / 2, card.getCardTexture().getHeight() / 2); // Basic implementation, change later
+                            if ((i + 1) % 3 == 0)
+                                tableTwo.row();
+                        }else if (hand.size() > 6 && hand.size() <= 20) {
+                            tableTwo.add(cardButtons[i]).size(card.getCardTexture().getWidth() / 3, card.getCardTexture().getHeight() / 3); // Basic implementation, change later
+                            if ((i + 1) % 5 == 0)
+                                tableTwo.row();
+                        }else  {
+                            tableTwo.add(cardButtons[i]).size(card.getCardTexture().getWidth() / 4, card.getCardTexture().getHeight() / 4); // Basic implementation, change later
+                            if ((i + 1) % 6 == 0)
+                                tableTwo.row();
+                        }
         			}
         		}
         		else {

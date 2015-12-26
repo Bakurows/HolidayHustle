@@ -43,7 +43,9 @@ public abstract class PlayingCard {
     	return cardImage;
     }
 
-
+    public Texture getCardTexture() {
+        return cardTexture;
+    }
 
     //Other Methods
     public abstract void performAction(Player playerActingOn);
