@@ -30,7 +30,7 @@ public class MenuScreen implements Screen {
     private OrthogonalTiledMapRenderer renderer;
     private OrthographicCamera camera;
 
-    //Constructor
+    //single-arg Constructor
     public MenuScreen(HolidayHustle game) {
         this.game = game;
     }
@@ -46,6 +46,7 @@ public class MenuScreen implements Screen {
         camera.update();
         renderer.setView(camera);
         renderer.render();
+
 
         //Draws items from stage on screen and allows them to "act"
         stage.act(delta);
@@ -101,7 +102,7 @@ public class MenuScreen implements Screen {
             }
         });
         buttonPlay.pad(5);
-
+        //Settings Button
         buttonSettings = new TextButton("SETTINGS", skin);
         buttonSettings.addListener(new ClickListener() {
             @Override
@@ -111,7 +112,7 @@ public class MenuScreen implements Screen {
             }
         });
         buttonSettings.pad(5);
-
+        //Exit Button
         buttonExit = new TextButton("EXIT GAME", skin);
         buttonExit.addListener(new ClickListener() {
             @Override
@@ -162,6 +163,5 @@ public class MenuScreen implements Screen {
         skin.dispose();
         map.dispose();
         renderer.dispose();
-        System.out.println("Doing Stuff");
     }
 }

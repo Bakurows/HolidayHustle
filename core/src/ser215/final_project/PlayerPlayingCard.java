@@ -6,32 +6,15 @@ import com.badlogic.gdx.graphics.Texture;
  * Created by Brian on 11/18/2015.
  */
 public class PlayerPlayingCard extends PlayingCard {
-    private boolean winAttackBattle;
     private int strengthBoost;
 
-
-    //default constructor
-    public PlayerPlayingCard() {
-        super();
-        this.winAttackBattle = false;
-        this.strengthBoost = 0;
-    }
-
-    //2 parameter constructor
-    public PlayerPlayingCard(String type, boolean winAttackBattle, int strengthBoost, Texture cardTexture) {
+    //2-arg constructor
+    public PlayerPlayingCard(String type, int strengthBoost, Texture cardTexture) {
         super(type, strengthBoost, cardTexture);
-        this.winAttackBattle = winAttackBattle;
         this.strengthBoost = strengthBoost;
     }
 
-    public int getStatBoost() {
-        return strengthBoost;
-    }
-
-    public boolean winAttackBattle() {
-        return winAttackBattle;
-    }
-
+    //Performs the action associated with this type of playing card - Giving a player a strength boost/loss and giving a player the Instant Win ability
     @Override
     public void performAction(Player playerActingOn) {
         System.out.println("Perform action PlayerPlayingCard");

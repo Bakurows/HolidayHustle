@@ -7,37 +7,43 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import ser215.final_project.HolidayHustle;
 
-import java.util.Random;
-
 /**
- * Created by Brian on 11/30/2015.
+ * Created by Brian on 12/25/2015.
  */
-public class SettingsScreen implements Screen {
-    private HolidayHustle game;
+public class GameOverScreen implements Screen {
+    HolidayHustle game;
+    private String winningPlayer;
+    private TextField congratulation, winner;
+    private TextButton buttonMenu;
     private Stage stage;
     private Skin skin;
     private Table table;
-    private TextButton buttonMenu;
-    private TextField gameHeading;
+    //For the game map
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
     private OrthographicCamera camera;
 
-    //Single-arg constructor
-    public SettingsScreen(HolidayHustle game) {
+    //Two-arg Constructor
+    public GameOverScreen(HolidayHustle game, String winningPlayer) {
         this.game = game;
+        this.winningPlayer = winningPlayer;
     }
+
 
     @Override
     public void render(float delta) {
         //Clears the screen and makes it white
-        Gdx.gl.glClearColor(1,1,1,1);
+        Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         //Updates the camera and renderer
@@ -60,10 +66,8 @@ public class SettingsScreen implements Screen {
 
     @Override
     public void show() {
-        //Randomly selects a map to render in the background
-        Random rng = new Random();
-        int rand = rng.nextInt(4);
-        switch (rand) {
+        //Selecting a random map
+        switch (MathUtils.random(3)) {
             case 0: map = new TmxMapLoader().load("map_summer.tmx");
                 break;
             case 1: map = new TmxMapLoader().load("map_fall.tmx");
@@ -74,20 +78,19 @@ public class SettingsScreen implements Screen {
                 break;
         }
 
-        //Renders the background map
+        //Renders the map
         renderer = new OrthogonalTiledMapRenderer(map);
         camera = new OrthographicCamera();
         camera.position.set(960 / 2, 960 / 2, 0);
 
-        //Creates stage - allows things (buttons, SelectBoxes, TextFields, etc.) to be drawn on screen
+        //Creating the stage for actors to go on
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
-
         skin = new Skin(Gdx.files.internal("uiskin.json"));
 
-        //Creates table for easy formatting of on-screen items
+        //Creating tables for formatting on-screen items
         table = new Table(skin);
-        table.setBounds(0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+        table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         //Creating Buttons
         buttonMenu = new TextButton("MENU", skin);
@@ -100,19 +103,20 @@ public class SettingsScreen implements Screen {
         });
         buttonMenu.pad(5);
 
-        //Creating heading
-        gameHeading = new TextField("Holiday Hustle", skin, "large");
-        gameHeading.setDisabled(true);
-        gameHeading.setWidth(435);
-        gameHeading.setPosition(Gdx.graphics.getWidth() / 2 - gameHeading.getWidth() / 2, 810);
+        //Creating the Text fields displaying the winner and congrats.
+        congratulation = new TextField("Congratulation, you have won!", skin, "regular");
+        winner = new TextField(winningPlayer, skin, "regular");
 
         //Adding elements to the table, and the table to the stage
-        table.add(gameHeading);
-        table.getCell(gameHeading).minWidth(675);
-        table.getCell(gameHeading).spaceBottom(100);
+        table.add(congratulation);
+        table.getCell(congratulation).width(700);
+        table.row();
+        table.add(winner);
+        table.getCell(winner).width(265);
+        table.getCell(winner).spaceBottom(100);
         table.row();
         table.add(buttonMenu);
-        table.top();
+        stage.addActor(table);
         stage.addActor(table);
     }
 
@@ -134,8 +138,8 @@ public class SettingsScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
-        skin.dispose();
         renderer.dispose();
         map.dispose();
+        skin.dispose();
     }
 }

@@ -13,13 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 public abstract class PlayingCard {
     private Texture cardTexture;
     private Image cardImage;
-    
     protected String type;
     protected int tier;
-
-    //Default constructor
-    public PlayingCard() {
-    }
 
     //Three parameter constructor
     public PlayingCard(String type, int tier, Texture cardTexture) {
@@ -31,10 +26,6 @@ public abstract class PlayingCard {
 
 
     //Accessor Methods
-    public int getTier() {
-    	return tier;
-    }
-    
     public String getType() {
     	return type;
     }

@@ -11,34 +11,30 @@ public class Player {
     private boolean computerPlayer;
     private CharacterType character;
     private int boardLocation;
-    private PlayerPlayingCard activeCard;
     private ArrayList<PlayingCard> hand;
     private int turnSkips;
-    private int playerNumber;
     private boolean instantWin;
     private int rollBoost;
     private int strengthGain;
 
-    //Default Constructor
+    //no-arg Constructor
     public Player() {
         this.name = "Default Player";
-        this.character = new CharacterType();  //Incomplete
+        this.character = new CharacterType();
         this.computerPlayer = true;
         this.boardLocation = 0;
-        //this.activeCard = null; //Incomplete
         this.turnSkips = 0;
         this.instantWin = false;
         this.rollBoost = 0;
         this.hand = new ArrayList<PlayingCard>();
     }
 
-    //Three parameter constructor
+    //Three-arg constructor
     public Player(String name, boolean computerPlayer, String characterName) {
         this.name = name;
         this.computerPlayer = computerPlayer;
         this.boardLocation = 0;
         this.character = new CharacterType(characterName);
-        //this.activeCard = null; //Incomplete
         this.turnSkips = 0;
         this.instantWin = false;
         this.rollBoost = 0;
@@ -62,21 +58,9 @@ public class Player {
     public int getBoardLocation() {
         return boardLocation;
     }
-
-    public PlayingCard getActiveCard() {
-        return activeCard;
-    }
     
     public ArrayList<PlayingCard> getHand() {
     	return hand;
-    }
-
-    public int LosingTurnLeft() {
-        return turnSkips;
-    }
-
-    public int getPlayerNumber() {
-        return playerNumber;
     }
 
     public boolean isInstantWin() {
@@ -91,23 +75,21 @@ public class Player {
         return turnSkips;
     }
 
-
+    public int getRollBoost() {
+        return rollBoost;
+    }
 
     //Mutator Methods
     public void increaseBoardLocation(int diceRoll) {
-        this.boardLocation += diceRoll;
-    }
+        if (this.boardLocation + diceRoll < 0) {
 
-    public void setActiveCard(PlayerPlayingCard activeCard) {
-        this.activeCard = activeCard;
+        }else {
+            this.boardLocation += diceRoll;
+        }
     }
 
     public void incrementTurnSkips(int amountChanged) {
         this.turnSkips += amountChanged;
-    }
-
-    public void setPlayerNumber(int playerNumber) {
-        this.playerNumber = playerNumber;
     }
 
     public void gainInstantWin() {
@@ -127,47 +109,39 @@ public class Player {
     }
 
     //Other Methods
+    //Roll die method to get a random int between 1 and six. Used for rolling to move only
     public int rollDie() {
         int random = MathUtils.random(5) + 1;
         random += this.rollBoost;
         resetRollBoost();
-        //return random;
-        return 1;
+        return random;
     }
 
+    //Same as above method, but only used for rolling in battle, so it doesn't use the roll boost for moving
     public int rollForBattle() {
         int random = MathUtils.random(5) + 1;
         return random;
     }
-    
+
+    //Draws cards from the deck and adds them to the players hand
     public void drawCards(Deck deck, int num) {
     	for (int i = 0; i < num; i++) {
-    		System.out.println("Card about to be added to hand");
-    		this.hand.add(deck.drawCard());
-    		
-    		//FOR DEBUGGING
-    		System.out.println("Card added to hand");
+            if (deck.getDeckArray().size() > 0 )
+                this.hand.add(deck.drawCard());
     	}
     }
 
+    //Removes a card from the players hand
     public void removeCard(PlayingCard card) {
         this.hand.remove(card);
     }
-    
-    public int handSize() {
-    	return hand.size();
-    }
-    
-    
 
+    //Determines if the attacker or the defender wins the battle
     public boolean winBattle(Player defender) {
         int attackerRoll = rollForBattle();
         int defenderRoll = rollForBattle();
 
-
-        //INSERT FORMULA FOR DETERMINING WINNER AFTER THIS
-        if ((attackerRoll + this.character.getCharacterPoints() + this.strengthGain /*+ this.activeCard.getStrengthBoost()*/) > (defenderRoll + defender.character.getCharacterPoints() + defender.getStrengthGain() /*+ defender.activeCard.getStrengthBoost()*/) ||
-                this.instantWin) {
+        if ((attackerRoll + this.character.getCharacterPoints() + this.strengthGain) > (defenderRoll + defender.character.getCharacterPoints() + defender.getStrengthGain()) || this.instantWin) {
             return true;
         }else {
             return false;

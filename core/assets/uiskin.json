@@ -58,6 +58,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 },
 com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
 	default: { selection: selection, background: textfield, font: small-font, fontColor: white, cursor: cursor },
+    regular: { selection: selection, background: textfield, font: default-font, fontColor: white, cursor: cursor },
     large: { selection: selection, background: textfield, font: large-font, fontColor: white, cursor: cursor }
 },
 com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {

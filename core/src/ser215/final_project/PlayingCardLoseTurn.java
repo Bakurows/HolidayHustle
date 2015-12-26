@@ -8,12 +8,6 @@ import com.badlogic.gdx.graphics.Texture;
 public class PlayingCardLoseTurn extends PlayingCard {
     private int turnsLost;
 
-    //Default Constructor
-    public PlayingCardLoseTurn() {
-        super();
-        turnsLost = 0;
-    }
-
     //Name parameter constructor
     public PlayingCardLoseTurn(String type, int turnsLost, Texture cardTexture) {
         super(type, turnsLost, cardTexture);
@@ -21,6 +15,7 @@ public class PlayingCardLoseTurn extends PlayingCard {
     }
 
 
+    //Performs the action associated with this type of playing card - Making a player lose turns
     @Override
     public void performAction(Player playerActingOn) {
         System.out.println("Perform action PlayingCardLoseTurn");

@@ -8,21 +8,15 @@ import com.badlogic.gdx.graphics.Texture;
 public class PlayingCardMoveSpaces extends PlayingCard {
     private int spaceMove;
 
-    //default constructor
-    public PlayingCardMoveSpaces() {
-        super();
-        this.spaceMove = 0;
-    }
-
     //2 parameter constructor
     public PlayingCardMoveSpaces(String type, int spaceMove, Texture cardTexture) {
         super(type, spaceMove, cardTexture);
         this.spaceMove = spaceMove;
     }
 
+    //Performs the action associated with this type of playing card - Moving a player a designated number of spaces
     @Override
     public void performAction(Player playerActingOn) {
-        System.out.println("Perform action PlayingCardMoveSpaces");
         playerActingOn.increaseBoardLocation(this.spaceMove);
     }
 }

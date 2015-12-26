@@ -1,6 +1,6 @@
 package ser215.final_project;
 
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 
 import java.time.LocalDate;
@@ -11,31 +11,15 @@ import java.util.ArrayList;
  */
 public class GameKeeper {
     private int numberPlayers;
-    //private int[] playerLocations;
     private LocalDate currentDate;
     private Player[] playersList;
     private int currentPlayerTurn;
-    //private PlayingCard[] playingCards;
     private Deck deck;
-    private int lastBoardLocation;//Need to change for correct value
+    private int lastBoardLocation;
     private String activeMap;
 
 
-    //Default Constructor
-    public GameKeeper() {
-        this.numberPlayers = 3;
-        //playerLocations = new int[] {0, 0, 0};
-        this.currentDate = this.currentDate.now();
-        this.playersList = new Player[3];
-        this.playersList[0] = new Player();
-        this.playersList[1] = new Player();
-        this.playersList[2] = new Player();
-        this.currentPlayerTurn = 0;
-        this.activeMap = "Fall";
-        this.deck = new Deck();
-    }
-
-    //X parameter constructor
+    //Four-arg constructor
     public GameKeeper(int numberPlayers, String[] playerNames, boolean[] computerPlayer, String[] playerCharacters) {
         this.numberPlayers = numberPlayers;
         this.currentDate = this.currentDate.now();
@@ -43,16 +27,9 @@ public class GameKeeper {
         this.deck = new Deck();
         for (int i = 0; i < numberPlayers; i++) {
             this.playersList[i] = new Player(playerNames[i], computerPlayer[i] , playerCharacters[i]);
-            
             // Each player starts with 3 cards from the deck
             this.playersList[i].drawCards(deck, 3);
-            
-            // FOR DEBUGGING
-            System.out.println("Player drew initial 3 cards");
         }
-        /*for (int i = 0; i < numberPlayers; i++) {
-            //playerLocations[i] = 0;
-        }*/
         this.currentPlayerTurn = 0;
         this.activeMap = "Fall";
     }
@@ -61,18 +38,6 @@ public class GameKeeper {
     //Accessor Methods
     public int getNumberPlayers() {
         return numberPlayers;
-    }
-
-    /*public int[] getPlayerLocations() {
-        return playerLocations;
-    }*/
-
-    /*public int getCurrentPlayerLocation() {
-        return this.playerLocations[this.currentPlayerTurn];
-    }*/
-
-    public LocalDate getCurrentDate() {
-        return currentDate;
     }
 
     public Player[] getPlayersList() {
@@ -96,7 +61,7 @@ public class GameKeeper {
             if (this.playersList[i].getName().equals(name))
                 return this.playersList[i];
         }
-        return null;
+        return new Player();
     }
 
     //Mutator Methods
@@ -105,9 +70,7 @@ public class GameKeeper {
     }
 
     public void incrementPlayerTurn() {
-        //System.out.println("Current Player: " + this.currentPlayerTurn);
         this.currentPlayerTurn = ((this.currentPlayerTurn + 1) % getNumberPlayers());
-        //System.out.println("Current Player: " + this.currentPlayerTurn);
     }
 
     public void setActiveMap(String activeMap) {
@@ -119,7 +82,6 @@ public class GameKeeper {
     }
 
     //Other Methods
-
     //Begins the next players turn
     public void nextTurn() {
         if (this.playersList[this.currentPlayerTurn].getTurnSkips() > 0) {
@@ -129,12 +91,11 @@ public class GameKeeper {
             if (this.playersList[currentPlayerTurn].getBoardLocation() == this.lastBoardLocation)
                 this.playersList[currentPlayerTurn].increaseBoardLocation(1);
             movePlayer(this.currentPlayerTurn, dieRoll);
-            System.out.println(this.playersList[this.currentPlayerTurn].getName() + " " + this.playersList[this.currentPlayerTurn].getBoardLocation() + ": " + dieRoll);
         }
-
-        incrementPlayerTurn(); // Does not advance turn until roll event happens
+        incrementPlayerTurn();
     }
-    
+
+    //Returns the hand of the player whose turn it currently is
     public ArrayList<PlayingCard> getPlayerHand() {
     	return this.playersList[this.currentPlayerTurn].getHand();
     }
@@ -145,13 +106,13 @@ public class GameKeeper {
         this.playersList[this.currentPlayerTurn].removeCard(card);
     }
 
-    //Moves a player
+    //Moves a player by the given roll of the die
     public void movePlayer(int playerToMove, int dieRoll) {
         if (!(this.playersList[playerToMove].getBoardLocation() + dieRoll > lastBoardLocation) && (this.playersList[playerToMove].getBoardLocation() + dieRoll < (lastBoardLocation) ||
                 this.playersList[playerToMove].getBoardLocation() + dieRoll == lastBoardLocation)){
             if (otherPlayerPresent(this.playersList[playerToMove].getBoardLocation() + dieRoll)) {
                 if (this.playersList[this.currentPlayerTurn].winBattle(this.playersList[getPlayerNumberAtLocation(this.playersList[playerToMove].getBoardLocation() + dieRoll)])) {
-                    moveLosingDefender(getPlayerNumberAtLocation(this.playersList[playerToMove].getBoardLocation() + dieRoll));
+                    moveLosingDefender(getPlayerNumberAtLocation(this.playersList[playerToMove].getBoardLocation() + dieRoll), playerToMove);
                     changePlayerLocation(playerToMove, dieRoll);
                 }else {
                     movePlayer(playerToMove, dieRoll - 1);
@@ -160,6 +121,25 @@ public class GameKeeper {
                 changePlayerLocation(playerToMove, dieRoll);
             }
         }
+        hasWon();
+        performBoardEvent(this.playersList[this.currentPlayerTurn].getBoardLocation());
+    }
+
+    public void movePlayerDefender(int playerToMove, int dieRoll, int attacker) {
+        if (!(this.playersList[playerToMove].getBoardLocation() + dieRoll > lastBoardLocation) && (this.playersList[playerToMove].getBoardLocation() + dieRoll < (lastBoardLocation) ||
+                this.playersList[playerToMove].getBoardLocation() + dieRoll == lastBoardLocation)){
+            if (otherPlayerPresentDefender(this.playersList[playerToMove].getBoardLocation() + dieRoll, attacker)) {
+                if (this.playersList[this.currentPlayerTurn].winBattle(this.playersList[getPlayerNumberAtLocation(this.playersList[playerToMove].getBoardLocation() + dieRoll)])) {
+                    moveLosingDefender(getPlayerNumberAtLocation(this.playersList[playerToMove].getBoardLocation() + dieRoll), playerToMove);
+                    changePlayerLocation(playerToMove, dieRoll);
+                }else {
+                    movePlayer(playerToMove, dieRoll - 1);
+                }
+            }else {
+                changePlayerLocation(playerToMove, dieRoll);
+            }
+        }
+        hasWon();
         performBoardEvent(this.playersList[this.currentPlayerTurn].getBoardLocation());
     }
 
@@ -172,13 +152,23 @@ public class GameKeeper {
         return false;
     }
 
-    //Moves the defender if he/she loses
-    public void moveLosingDefender (int playerNumber) {
-        //THIS IS MOVING THE LOSING DEFENDER BACK 2 BECAUSE IT MOVES BACK ONE AND RUNS INTO THE ATTACKER. ONLY IF THE ATTACKER IS RIGHT BEHIND THOUGH??? THIS IS WHY ORIGINALLY HAD MIN MOVE 2
-        movePlayer(playerNumber, -1);       //-1 is back one space for losing battle
+    public boolean otherPlayerPresentDefender(int boardLocation, int attacker) {
+        if (this.playersList[attacker].getBoardLocation() == boardLocation)
+            return false;
+        for (int i = 0; i < this.numberPlayers; i++) {
+            if (this.playersList[i].getBoardLocation() == boardLocation)
+                return true;
+        }
+        return false;
     }
 
-    //Returns the player number (based of turn order) at a given board location
+
+    //Moves the defender if he/she loses
+    public void moveLosingDefender (int playerNumber, int attacker) {
+        movePlayerDefender(playerNumber, -1, attacker);       //-1 is back one space for losing battle
+    }
+
+    //Returns the player number (based on turn order) at a given board location
     public int getPlayerNumberAtLocation(int boardLocation) {
         for (int i = 0; i < this.numberPlayers; i++) {
             if (this.playersList[i].getBoardLocation() == boardLocation)
@@ -186,8 +176,6 @@ public class GameKeeper {
         }
         return 0;
     }
-
-    //NEED TO ADD METHOD(s) FOR VARIOUS GAME BOARD EVENTS SUCH AS LOSE TURN
 
     //Checks if the board location a player has landed on has an effect. If so, performs the appropriate effect
     /**
@@ -213,7 +201,6 @@ public class GameKeeper {
      */
     public void performBoardEvent(int boardLocation) {
         boardLocation++;
-
         if (activeMap.equals("Fall")) {
             if (boardLocation == 9 || boardLocation == 18 || boardLocation == 24 || boardLocation == 37 || boardLocation == 41 || boardLocation == 45 ||
                     boardLocation == 50 || boardLocation == 55 || boardLocation == 67 || boardLocation == 76) {
@@ -249,12 +236,14 @@ public class GameKeeper {
                 //increase Player strength by 1
                 this.playersList[this.currentPlayerTurn].increaseStrengthGain(1);
             }else if (boardLocation == 6 || boardLocation == 44 || boardLocation == 60 || boardLocation == 92) {
-                //TODO Gain random card
+                //gain a random card
                 this.playersList[this.currentPlayerTurn].drawCards(this.deck, 1);
                 //move forward 1 space
                 movePlayer(this.currentPlayerTurn, 1);
             }else if (boardLocation == 9 || boardLocation == 50 || boardLocation == 75 || boardLocation == 86 || boardLocation == 99) {
-                //TODO Lose random card
+                //Lose a random card if you have one
+                if (this.playersList[this.currentPlayerTurn].getHand().size() != 0)
+                    this.playersList[this.currentPlayerTurn].removeCard(this.playersList[this.currentPlayerTurn].getHand().remove(MathUtils.random(this.playersList[this.currentPlayerTurn].getHand().size() - 1)));
                 //go back 2 spaces
                 movePlayer(this.currentPlayerTurn, -2);
             }
@@ -279,7 +268,8 @@ public class GameKeeper {
             }else if (boardLocation == 10 || boardLocation == 40 || boardLocation == 72) {
                 //gain 2-3 strength
                 this.playersList[this.currentPlayerTurn].increaseStrengthGain(MathUtils.random(1) + 2);
-                //TODO receive random card
+                //gain a random card
+                this.playersList[this.currentPlayerTurn].drawCards(this.deck, 1);
             }
         }else if (activeMap.equals("Summer")) {
             if (boardLocation == 4 || boardLocation == 13 || boardLocation == 19 || boardLocation == 29 || boardLocation == 43 || boardLocation == 50 || boardLocation == 58 || boardLocation == 64
@@ -311,6 +301,25 @@ public class GameKeeper {
                 }
             }
         }
+    }
+
+    //Determines if a player has won the game
+    public boolean hasWon() {
+        for (int i = 0; i < this.numberPlayers; i++) {
+            if (this.playersList[i].getBoardLocation() >= lastBoardLocation) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //Returns the player who won the game
+    public String getWinningPlayer() {
+        for (int i = 0; i < this.numberPlayers; i++) {
+            if (this.playersList[i].getBoardLocation() >= this.lastBoardLocation)
+                return this.playersList[i].getName();
+        }
+        return null;
     }
 
     //Returns the coordinates to draw the players characters on the board
@@ -778,7 +787,6 @@ public class GameKeeper {
                 coords[1] = 864;
             }
         }
-
 
         return coords;
     }

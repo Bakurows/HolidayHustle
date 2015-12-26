@@ -17,10 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import ser215.final_project.GameKeeper;
 import ser215.final_project.HolidayHustle;
-import ser215.final_project.Player;
 import ser215.final_project.PlayingCard;
-
-import javax.xml.soap.Text;
 import java.time.LocalDate;
 import java.time.Year;
 import java.util.ArrayList;
@@ -28,37 +25,29 @@ import java.util.ArrayList;
 /**
  * Created by Brian on 11/17/2015.
  */
-public class GameScreen implements Screen, InputProcessor {
+public class GameScreen implements Screen {
     private HolidayHustle game;
     private GameKeeper gameKeeper;
-    private SpriteBatch sb;
     //For the game map
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
     private OrthographicCamera camera;
     private LocalDate tempDate;
     private String activeMap;
-    //For buttons
+    //For all other on screen items
+    private SpriteBatch sb;
     private Stage stage;
     private Skin skin;
     private Table table, tableTwo, tableThree;
     private TextButton buttonRoll, buttonMenu, buttonShowCards;
+    private TextButton confirmTarget;
     private TextField currentPlayerTurn;
     private TextField whichPlayerPrompt;
     private SelectBox<String> playerNames;
-    private TextButton confirmTarget;
-    private boolean targetConfirmed;
 
-
-    public GameScreen(HolidayHustle game) {
-        this.game = game;
-
-        this.gameKeeper = new GameKeeper();
-    }
-
+    //Two-arg constructor
     public GameScreen(HolidayHustle game, GameKeeper theGameKeeper) {
         this.game = game;
-
         this.gameKeeper = theGameKeeper;
     }
 
@@ -73,35 +62,29 @@ public class GameScreen implements Screen, InputProcessor {
         renderer.setView(camera);
         renderer.render();
 
-        //TODO Rewrite below with loop
+        //Draws all players on the game board
         sb.begin();
         for (int i = 0; i < gameKeeper.getNumberPlayers(); i++) {
             gameKeeper.getPlayersList()[i].getCharacter().getCharacterSprite().setPosition(GameKeeper.getCoords(gameKeeper.getPlayersList()[i].getBoardLocation(), activeMap)[0], GameKeeper.getCoords(gameKeeper.getPlayersList()[i].getBoardLocation(), activeMap)[1]);
             gameKeeper.getPlayersList()[i].getCharacter().getCharacterSprite().draw(sb);
         }
-        /*gameKeeper.getPlayersList()[0].getCharacter().getCharacterSprite().setPosition(GameKeeper.getCoords(gameKeeper.getPlayersList()[0].getBoardLocation())[0], GameKeeper.getCoords(gameKeeper.getPlayersList()[0].getBoardLocation())[1]);
-        gameKeeper.getPlayersList()[0].getCharacter().getCharacterSprite().draw(sb);
-
-        gameKeeper.getPlayersList()[1].getCharacter().getCharacterSprite().setPosition(GameKeeper.getCoords(gameKeeper.getPlayersList()[1].getBoardLocation())[0], GameKeeper.getCoords(gameKeeper.getPlayersList()[1].getBoardLocation())[1]);
-        gameKeeper.getPlayersList()[1].getCharacter().getCharacterSprite().draw(sb);
-
-        gameKeeper.getPlayersList()[2].getCharacter().getCharacterSprite().setPosition(GameKeeper.getCoords(gameKeeper.getPlayersList()[2].getBoardLocation())[0], GameKeeper.getCoords(gameKeeper.getPlayersList()[2].getBoardLocation())[1]);
-        gameKeeper.getPlayersList()[2].getCharacter().getCharacterSprite().draw(sb);*/
         sb.end();
 
         //Displays the current players turn
-        currentPlayerTurn.setText(gameKeeper.getPlayersList()[gameKeeper.getCurrentPlayerTurn()].getName() + "'s Turn! " + gameKeeper.getPlayersList()[gameKeeper.getCurrentPlayerTurn()].getStrengthGain()
-         + gameKeeper.getPlayersList()[gameKeeper.getCurrentPlayerTurn()].isInstantWin());
+        currentPlayerTurn.setText(gameKeeper.getPlayersList()[gameKeeper.getCurrentPlayerTurn()].getName() + "'s Turn!");
 
-        //Automatic Turn for computer Players
+        //Automatic Turn for computer Players - Doesn't use any cards
         if (gameKeeper.getPlayersList()[gameKeeper.getCurrentPlayerTurn()].isComputerPlayer()) {
             gameKeeper.nextTurn();
         }
 
-        //TODO Remove the following temp code to skip winning player turn... Replace with game over
-        //if (gameKeeper.getPlayersList()[gameKeeper.getCurrentPlayerTurn()].getBoardLocation() > gameKeeper.)
+        //Determines if someone has won. If so, goes to GameOver screen
+        if (gameKeeper.hasWon()) {
+            game.setScreen(new GameOverScreen(game, gameKeeper.getWinningPlayer()));
+            dispose();
+        }
 
-        //Draws items from stage on screen and allows them to "act"
+        //Draws items from stage on screen
         stage.act(delta);
         stage.draw();
     }
@@ -124,11 +107,11 @@ public class GameScreen implements Screen, InputProcessor {
         } else if (LocalDate.now().isAfter(tempDate.of(Year.now().getValue(), 12, 20)) && LocalDate.now().isBefore(tempDate.of(Year.now().getValue() + 1, 1, 1))) {
             map = new TmxMapLoader().load("map_winter.tmx");
             activeMap = "Winter";
-            gameKeeper.setLastBoardLocation(104);
+            gameKeeper.setLastBoardLocation(103);
         } else if (LocalDate.now().isAfter(tempDate.of(Year.now().getValue() - 1, 12, 31)) && LocalDate.now().isBefore(tempDate.of(Year.now().getValue(), 3, 20))) {
             map = new TmxMapLoader().load("map_winter.tmx");
             activeMap = "Winter";
-            gameKeeper.setLastBoardLocation(104);
+            gameKeeper.setLastBoardLocation(103);
         } else if (LocalDate.now().isAfter(tempDate.of(Year.now().getValue(), 3, 19)) && LocalDate.now().isBefore(tempDate.of(Year.now().getValue(), 6, 21))) {
             map = new TmxMapLoader().load("map_spring.tmx");
             activeMap = "Spring";
@@ -138,7 +121,7 @@ public class GameScreen implements Screen, InputProcessor {
             activeMap = "Summer";
             gameKeeper.setLastBoardLocation(115);
         }
-
+        //Sets the active map in the GameKeeper object
         gameKeeper.setActiveMap(activeMap);
 
         //Renders the map
@@ -146,33 +129,31 @@ public class GameScreen implements Screen, InputProcessor {
         camera = new OrthographicCamera();
         camera.position.set(960 / 2, 960 / 2, 0);
 
+        //SpriteBatch for rendering the character on screen
         sb = new SpriteBatch();
-        //gameKeeper = new GameKeeper();
 
         //Creates stage - allows things (buttons, SelectBoxes, TextFields, etc.) to be drawn on screen
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
-        //Gdx.input.setInputProcessor(this);
-
         skin = new Skin(Gdx.files.internal("uiskin.json"));
 
         //Creates table for easy formatting of on-screen items
         table = new Table(skin);
         table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
+        //Table for the cards
         tableTwo = new Table(skin);
         tableTwo.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
+        //Table for the selecting player to use cards on
         tableThree = new Table(skin);
         tableThree.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 
-        //Textfield displaying current players turn
+        //TextField displaying current players turn
         currentPlayerTurn = new TextField("", skin);
         currentPlayerTurn.setDisabled(true);
         currentPlayerTurn.setWidth(360);
         currentPlayerTurn.setPosition(Gdx.graphics.getWidth() / 2 - currentPlayerTurn.getWidth() / 2 + 155, Gdx.graphics.getHeight() - currentPlayerTurn.getHeight());
-        
+
         //Creating Buttons
         buttonRoll = new TextButton("ROLL", skin);
         buttonRoll.addListener(new ClickListener() {
@@ -185,39 +166,41 @@ public class GameScreen implements Screen, InputProcessor {
             }
         });
         buttonRoll.pad(1);
-        
+        //Button to show cards in a players hand
         buttonShowCards = new TextButton("SHOW CARDS", skin);
         buttonShowCards.addListener(new ClickListener() {
-        	boolean toggle = false; //Changes state when clicked
-        	@Override
-        	public void clicked(InputEvent event, float x, float y) {
-        		toggle = !toggle;
-        		if (toggle) {
-        			ArrayList<PlayingCard> hand = gameKeeper.getPlayerHand();
+            boolean toggle = false; //Changes state when clicked
+
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                toggle = !toggle;
+                if (toggle) {
+                    ArrayList<PlayingCard> hand = gameKeeper.getPlayerHand();
                     final int handSize = hand.size();
-        			final ImageButton[] cardButtons = new ImageButton[hand.size()];
-        			for (int i = 0; i < hand.size(); i++) {
-        				final PlayingCard card = hand.get(i); // Get card from hand
-        				cardButtons[i] = new ImageButton(card.getImage().getDrawable()); // Make button for card
-        				cardButtons[i].addListener(new ClickListener() {
-        					@Override
-        					public void clicked(InputEvent event, float x, float y) {
-                                //Need to disable the card button when clicked
+                    final ImageButton[] cardButtons = new ImageButton[hand.size()];
+                    for (int i = 0; i < hand.size(); i++) {
+                        final PlayingCard card = hand.get(i); // Get card from hand
+                        cardButtons[i] = new ImageButton(card.getImage().getDrawable()); // Make button for card
+                        cardButtons[i].addListener(new ClickListener() {
+                            @Override
+                            public void clicked(InputEvent event, float x, float y) {
                                 for (int i = 0; i < handSize; i++) {
                                     cardButtons[i].setTouchable(Touchable.disabled);
                                 }
                                 if (card.getType().equals("battle_win") || card.getType().equals("add_strength")) {
-                                    gameKeeper.playCard(card,gameKeeper.getPlayersList()[gameKeeper.getCurrentPlayerTurn()]);
-                                }else {
-                                    //TODO code for selecting player to act on
+                                    gameKeeper.playCard(card, gameKeeper.getPlayersList()[gameKeeper.getCurrentPlayerTurn()]);
+                                } else {
+                                    //TextField asking the player which player to play the selected card on
                                     whichPlayerPrompt = new TextField("Which player do you want to use this card on?", skin);
                                     whichPlayerPrompt.setDisabled(true);
                                     whichPlayerPrompt.setWidth(500);
 
+                                    //SelectBox for player to select player to play card on
                                     playerNames = new SelectBox<>(skin);
                                     playerNames.setItems(gameKeeper.getPlayerNames());
                                     playerNames.setWidth(265);
 
+                                    //Button to play the selected card on the selected target
                                     confirmTarget = new TextButton("Play card on target!", skin);
                                     confirmTarget.setWidth(360);
                                     confirmTarget.addListener(new ClickListener() {
@@ -233,32 +216,32 @@ public class GameScreen implements Screen, InputProcessor {
                                     tableThree.row();
                                     tableThree.add(confirmTarget);
                                 }
-        					}
-        				});
-        				cardButtons[i].pad(1);
+                            }
+                        });
+                        cardButtons[i].pad(1);
                         if (hand.size() <= 6) {
                             tableTwo.add(cardButtons[i]).size(card.getCardTexture().getWidth() / 2, card.getCardTexture().getHeight() / 2); // Basic implementation, change later
                             if ((i + 1) % 3 == 0)
                                 tableTwo.row();
-                        }else if (hand.size() > 6 && hand.size() <= 20) {
+                        } else if (hand.size() > 6 && hand.size() <= 20) {
                             tableTwo.add(cardButtons[i]).size(card.getCardTexture().getWidth() / 3, card.getCardTexture().getHeight() / 3); // Basic implementation, change later
                             if ((i + 1) % 5 == 0)
                                 tableTwo.row();
-                        }else  {
+                        } else {
                             tableTwo.add(cardButtons[i]).size(card.getCardTexture().getWidth() / 4, card.getCardTexture().getHeight() / 4); // Basic implementation, change later
                             if ((i + 1) % 6 == 0)
                                 tableTwo.row();
                         }
-        			}
-        		}
-        		else {
-        			// Remove cards display
+                    }
+                } else {
+                    // Removes cards display
                     tableTwo.reset();
-        		}
-        	}
+                    tableThree.reset();
+                }
+            }
         });
         buttonShowCards.pad(1);
-
+        //Menu button
         buttonMenu = new TextButton("MENU", skin);
         buttonMenu.addListener(new ClickListener() {
             @Override
@@ -274,7 +257,6 @@ public class GameScreen implements Screen, InputProcessor {
         table.add(buttonShowCards);
         table.getCell(buttonShowCards).spaceRight(410);
         table.add(buttonRoll);
-        //table.getCell(buttonRoll).spaceBottom(5);
         table.row();
         table.add();
         table.add(buttonMenu);
@@ -307,57 +289,5 @@ public class GameScreen implements Screen, InputProcessor {
         sb.dispose();
         map.dispose();
         renderer.dispose();
-        System.out.println("Doing Stuff");
-    }
-
-    @Override
-    public boolean keyDown(int keycode) {
-
-        if(keycode == Input.Keys.ENTER)
-            gameKeeper.nextTurn();
-
-        if(keycode == Input.Keys.NUMPAD_1)
-            gameKeeper.movePlayer(0,1);
-        if(keycode == Input.Keys.NUMPAD_2)
-            gameKeeper.movePlayer(0,2);
-        if(keycode == Input.Keys.NUMPAD_3)
-            gameKeeper.movePlayer(0,4);
-
-        return false;
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(int amount) {
-        return false;
     }
 }

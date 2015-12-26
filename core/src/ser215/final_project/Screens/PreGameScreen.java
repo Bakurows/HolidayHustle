@@ -6,10 +6,10 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -28,15 +28,15 @@ public class PreGameScreen implements Screen {
     private final String[] numPlayers, characterChoices, computerPlayers;
     private GameKeeper gameKeeper;
     private String[] names, characterNames;
-    private boolean[] iscomputerPlayer;
+    private boolean[] isComputerPlayer;
     private Texture[] charTextures;
     private Image[] charImages;
     private Stage stage;
     private Table table;
     private Skin skin;
     private SelectBox<String> numberOfPlayers;
-    private SelectBox<String>[] playerCharacters; //playerOneCharacter, playerTwoCharacter, playerThreeCharacter, playerFourCharacter, playerFiveCharacter, playerSixCharacter;
-    private SelectBox<String>[] computerPlayerBoxes; //computerPlayerOne, computerPlayerTwo, computerPlayerThree, computerPlayerFour, computerPlayerFive, computerPlayerSix;
+    private SelectBox<String>[] playerCharacters;
+    private SelectBox<String>[] computerPlayerBoxes;
     private TextField numberOfPlayersText;
     private TextField playerOneName, playerTwoName, playerThreeName, playerFourName, playerFiveName, playerSixName;
     private TextButton buttonPlay, buttonMenu;
@@ -44,12 +44,12 @@ public class PreGameScreen implements Screen {
     private OrthogonalTiledMapRenderer renderer;
     private OrthographicCamera camera;
 
+    //Single-arg constructor
     public PreGameScreen(HolidayHustle game) {
         this.game = game;
         numPlayers = new String[]{"3", "4", "5", "6"};
         characterChoices = new String[] {"Frosty", "Jack", "Bugs", "Piper"};
         computerPlayers = new String [] {"Person", "Computer"};
-        //computerPlayers = new String [] {"Computer", "Person"};
         playerCharacters = new SelectBox[6];
         computerPlayerBoxes = new SelectBox[6];
     }
@@ -57,14 +57,16 @@ public class PreGameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(1,1,1,1);
+        //Clears the screen and makes it white
+        Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        //Add stuff here
 
+        //Updates the camera and renderer
         camera.update();
         renderer.setView(camera);
         renderer.render();
 
+        //Updates all TextField and SelectBox objects (Disables unneeded ones, Resets fields to standard names, resets selections to slot one - Only if number of players box is decreased)
         if (numberOfPlayers.getSelected().equals("3")) {
             playerFourName.setDisabled(true);
             playerFiveName.setDisabled(true);
@@ -125,6 +127,7 @@ public class PreGameScreen implements Screen {
             computerPlayerBoxes[5].setDisabled(false);
         }
 
+        //Updates the image showing the currently selected characters for each player
         for (int i = 0; i < 6; i++) {
             if (playerCharacters[i].getSelected().equals("Frosty")) {
                 charTextures[i] = new Texture(Gdx.files.internal("Characters/Frosty_Medium.png"));
@@ -141,12 +144,14 @@ public class PreGameScreen implements Screen {
             }
         }
 
+        //Draws items from stage on screen
         stage.act(delta);
         stage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
+        //Adjusts the camera to show the background map correctly
         camera.viewportWidth = width;
         camera.viewportHeight = height;
         camera.update();
@@ -154,9 +159,8 @@ public class PreGameScreen implements Screen {
 
     @Override
     public void show() {
-        Random rng = new Random();
-        int rand = rng.nextInt(4);
-        switch (rand) {
+        //Randomly selects a map to render
+        switch (MathUtils.random(3)) {
             case 0: map = new TmxMapLoader().load("map_summer.tmx");
                 break;
             case 1: map = new TmxMapLoader().load("map_fall.tmx");
@@ -166,41 +170,40 @@ public class PreGameScreen implements Screen {
             case 3: map = new TmxMapLoader().load("map_spring.tmx");
                 break;
         }
+        //Renders the map
         renderer = new OrthogonalTiledMapRenderer(map);
         camera = new OrthographicCamera();
         camera.position.set(960 / 2, 960 / 2, 0);
 
-
+        //Creates stage - allows things (buttons, SelectBoxes, TextFields, etc.) to be drawn on screen
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
-
         skin = new Skin(Gdx.files.internal("uiskin.json"));
 
+        //Creating the table for formatting on-screen items
         table = new Table(skin);
         table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         table.left();
         table.pad(0,50,0,0);
 
-
+        //SelectBox to enter the number of players
         numberOfPlayers = new SelectBox<String>(skin);
         numberOfPlayers.setItems(numPlayers);
         numberOfPlayers.setWidth(110);
         numberOfPlayers.setPosition(Gdx.graphics.getWidth() / 2 - numberOfPlayers.getWidth() / 2, 810);
 
+        //TextField asking the user how many players are playing
         numberOfPlayersText = new TextField("How Many Players Are Playing?", skin);
         numberOfPlayersText.setDisabled(true);
         numberOfPlayersText.setWidth(435);
         numberOfPlayersText.setPosition(Gdx.graphics.getWidth() / 2 - numberOfPlayersText.getWidth() / 2, 820 + numberOfPlayers.getHeight());
 
         //Player name fields for players to enter their names.
-        //playerOneName = new TextField("Player One Name", skin);
-        playerOneName = new TextField("Frosty", skin);
+        playerOneName = new TextField("Player One Name", skin);
         playerOneName.setMaxLength(16);
-        //playerTwoName = new TextField("Player Two Name", skin);
-        playerTwoName = new TextField("Jack", skin);
+        playerTwoName = new TextField("Player Two Name", skin);
         playerTwoName.setMaxLength(16);
-        //playerThreeName = new TextField("Player Three Name", skin);
-        playerThreeName = new TextField("Bugs", skin);
+        playerThreeName = new TextField("Player Three Name", skin);
         playerThreeName.setMaxLength(16);
         playerFourName = new TextField("Player Four Name", skin);
         playerFourName.setDisabled(true);
@@ -212,56 +215,54 @@ public class PreGameScreen implements Screen {
         playerSixName.setDisabled(true);
         playerSixName.setMaxLength(16);
 
-        //Player character fields for players to choose their characters.
+        //Creates Select Boxes for players to choose their characters.
+        //One
         playerCharacters[0] = new SelectBox<String>(skin);
         playerCharacters[0].setItems(characterChoices);
         playerCharacters[0].setWidth(90);
-
+        //Two
         playerCharacters[1] = new SelectBox<String>(skin);
         playerCharacters[1].setItems(characterChoices);
         playerCharacters[1].setWidth(90);
-        //Temp
-        playerCharacters[1].setSelectedIndex(1);
-
+        //Three
         playerCharacters[2] = new SelectBox<String>(skin);
         playerCharacters[2].setItems(characterChoices);
         playerCharacters[2].setWidth(90);
-        //Temp
-        playerCharacters[2].setSelectedIndex(2);
-
+        //Four
         playerCharacters[3] = new SelectBox<String>(skin);
         playerCharacters[3].setItems(characterChoices);
         playerCharacters[3].setWidth(90);
-
+        //Five
         playerCharacters[4] = new SelectBox<String>(skin);
         playerCharacters[4].setItems(characterChoices);
         playerCharacters[4].setWidth(90);
-
+        //Six
         playerCharacters[5] = new SelectBox<String>(skin);
         playerCharacters[5].setItems(characterChoices);
         playerCharacters[5].setWidth(90);
 
-        //Select whether each player is computer or person
+        //Creates SelectBoxes for whether each player is computer or person
+        //One
         computerPlayerBoxes[0] = new SelectBox<String>(skin);
         computerPlayerBoxes[0].setItems(computerPlayers);
         computerPlayerBoxes[0].setWidth(90);
-
+        //Two
         computerPlayerBoxes[1] = new SelectBox<String>(skin);
         computerPlayerBoxes[1].setItems(computerPlayers);
         computerPlayerBoxes[1].setWidth(90);
-
+        //Three
         computerPlayerBoxes[2] = new SelectBox<String>(skin);
         computerPlayerBoxes[2].setItems(computerPlayers);
         computerPlayerBoxes[2].setWidth(90);
-
+        //Four
         computerPlayerBoxes[3] = new SelectBox<String>(skin);
         computerPlayerBoxes[3].setItems(computerPlayers);
         computerPlayerBoxes[3].setWidth(90);
-
+        //Five
         computerPlayerBoxes[4] = new SelectBox<String>(skin);
         computerPlayerBoxes[4].setItems(computerPlayers);
         computerPlayerBoxes[4].setWidth(90);
-
+        //Six
         computerPlayerBoxes[5] = new SelectBox<String>(skin);
         computerPlayerBoxes[5].setItems(computerPlayers);
         computerPlayerBoxes[5].setWidth(90);
@@ -272,9 +273,14 @@ public class PreGameScreen implements Screen {
         buttonPlay.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                //Creates an array of the player names
                 names = new String[Integer.parseInt(numberOfPlayers.getSelected())];
+                //Creates an array of the character of each player
                 characterNames = new String[Integer.parseInt(numberOfPlayers.getSelected())];
-                iscomputerPlayer = new boolean[Integer.parseInt(numberOfPlayers.getSelected())];
+                //Creates an array of whether each player is a real person or a computer player
+                isComputerPlayer = new boolean[Integer.parseInt(numberOfPlayers.getSelected())];
+
+                //Assigns all values for the above three arrays
                 names[0] = playerOneName.getText();
                 characterNames[0] = playerCharacters[0].getSelected();
                 names[1] = playerTwoName.getText();
@@ -297,16 +303,16 @@ public class PreGameScreen implements Screen {
                     names[5] = playerSixName.getText();
                     characterNames[5] = playerCharacters[5].getSelected();
                 }
-
                 for (int i = 0; i < Integer.parseInt(numberOfPlayers.getSelected()); i++) {
                     if (computerPlayerBoxes[i].getSelected().equals("Person")) {
-                        iscomputerPlayer[i] = false;
+                        isComputerPlayer[i] = false;
                     }else {
-                        iscomputerPlayer[i] = true;
+                        isComputerPlayer[i] = true;
                     }
                 }
 
-                gameKeeper = new GameKeeper(Integer.parseInt(numberOfPlayers.getSelected()), names, iscomputerPlayer, characterNames);
+                //Creates the GameKeeper and passes it to the GameScreen constructor
+                gameKeeper = new GameKeeper(Integer.parseInt(numberOfPlayers.getSelected()), names, isComputerPlayer, characterNames);
                 game.setScreen(new GameScreen(game, gameKeeper));
                 dispose();
             }
@@ -322,8 +328,7 @@ public class PreGameScreen implements Screen {
             }
         });
 
-        //TODO Add sprites to show which character they have selected, and the current strength of that character
-        //TODO Might be easy by adding CharacterType objects to the screen???
+        //Creates images to show which character a player has selected
         charTextures = new Texture[6];
         charImages = new Image[6];
         for (int i = 0; i < 6; i++) {
@@ -332,6 +337,7 @@ public class PreGameScreen implements Screen {
         }
 
         //Adding items to table for positioning
+        //Player on stuff
         table.add(playerOneName);
         table.getCell(playerOneName).width(265);
         table.getCell(playerOneName).spaceBottom(25);
@@ -345,7 +351,7 @@ public class PreGameScreen implements Screen {
         table.add(charImages[0]);
 
         table.row();
-
+        //Player two stuff
         table.add(playerTwoName);
         table.getCell(playerTwoName).width(265);
         table.getCell(playerTwoName).spaceBottom(25);
@@ -359,7 +365,7 @@ public class PreGameScreen implements Screen {
         table.add(charImages[1]);
 
         table.row();
-
+        //Player three stuff
         table.add(playerThreeName);
         table.getCell(playerThreeName).width(265);
         table.getCell(playerThreeName).spaceBottom(25);
@@ -373,7 +379,7 @@ public class PreGameScreen implements Screen {
         table.add(charImages[2]);
 
         table.row();
-
+        //Player four stuff
         table.add(playerFourName);
         table.getCell(playerFourName).width(265);
         table.getCell(playerFourName).spaceBottom(25);
@@ -387,7 +393,7 @@ public class PreGameScreen implements Screen {
         table.add(charImages[3]);
 
         table.row();
-
+        //Player five stuff
         table.add(playerFiveName);
         table.getCell(playerFiveName).width(265);
         table.getCell(playerFiveName).spaceBottom(25);
@@ -401,7 +407,7 @@ public class PreGameScreen implements Screen {
         table.add(charImages[4]);
 
         table.row();
-
+        //Player six stuff
         table.add(playerSixName);
         table.getCell(playerSixName).width(265);
         table.getCell(playerSixName).spaceRight(35);
@@ -413,7 +419,6 @@ public class PreGameScreen implements Screen {
         table.add(charImages[5]);
 
         stage.addActor(table);
-
         stage.addActor(numberOfPlayersText);
         stage.addActor(numberOfPlayers);
         stage.addActor(buttonPlay);
@@ -444,6 +449,5 @@ public class PreGameScreen implements Screen {
         map.dispose();
         renderer.dispose();
         skin.dispose();
-        System.out.println("Doing Stuff");
     }
 }
